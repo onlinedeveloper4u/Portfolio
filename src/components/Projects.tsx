@@ -7,9 +7,22 @@ import ombiIcon from "/lovable-uploads/24e71ac5-ca00-4833-89e1-cd14ba31993b.png"
 import creatorIcon from "/lovable-uploads/49782510-2ca3-4464-acd4-d75f002421ba.png";
 import trackIcon from "/lovable-uploads/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png";
 import vooconnectIcon from "/lovable-uploads/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
+import mpowerIcon from "@/assets/mpower-app-icon.png";
 
 // Define default projects as a fallback
 const defaultProjects = [
+  {
+    title: "MPower Pro",
+    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. A creative platform that builds more than tracks - it builds you. Produce and record songs with multitrack DAW, add harmonies and effects, create instant music videos. Connect with rappers, singers, and producers globally. Features daily mood check-ins, goal tracking, challenges, masterclasses, and AI guidance. Seven apps in one - fusing music creation, collaboration, and personal development into one powerhouse platform.",
+    technologies: "iOS, Android, React Native, Strapi, AI Integration",
+    imageUrl: mpowerIcon,
+    link: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
+    playStoreLink: "https://play.google.com/store/apps/details?id=com.mpower.online",
+    websiteLink: "https://mpower.online/",
+    isApp: true,
+    category: "Cross-Platform",
+    period: "2023 - Present"
+  },
   {
     title: "Leaf - Book Your Friends",
     description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze! Whether you're the friend who always hosts or just getting into event planning, Leaf keeps event scheduling, task management, and social organizing all in one place. No more juggling multiple apps or endless text chains — Leaf turns coordinating plans into part of the fun. Import events from Partiful, Luma, Eventbrite, SeatGeek, and Fandango. Smart checklists, AI-generated descriptions, group scheduler, and micro-planner assistant help you focus on the fun while Leaf handles the details.",
@@ -128,19 +141,41 @@ const Projects = () => {
                     {project.technologies}
                   </span>
                 </div>
-                <a 
-                  href={project.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                >
-                  <span>{project.isApp ? "App Store" : "View Project"}</span>
-                  {project.isApp ? (
-                    <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
-                  ) : (
-                    <Smartphone size={14} />
+                <div className="flex flex-wrap gap-3">
+                  <a 
+                    href={project.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                  >
+                    <span>{project.isApp ? "App Store" : "View Project"}</span>
+                    {project.isApp ? (
+                      <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
+                    ) : (
+                      <Smartphone size={14} />
+                    )}
+                  </a>
+                  {project.playStoreLink && (
+                    <a 
+                      href={project.playStoreLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                    >
+                      <span>Play Store</span>
+                    </a>
                   )}
-                </a>
+                  {project.websiteLink && (
+                    <a 
+                      href={project.websiteLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                    >
+                      <span>Website</span>
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
