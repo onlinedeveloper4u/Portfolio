@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Code, Smartphone, Globe, Filter } from "lucide-react";
+import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server } from "lucide-react";
 import leafIcon from "/lovable-uploads/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
 import ombiIcon from "/lovable-uploads/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
 import creatorIcon from "/lovable-uploads/49782510-2ca3-4464-acd4-d75f002421ba.png";
@@ -8,7 +8,9 @@ import trackIcon from "/lovable-uploads/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png
 import vooconnectIcon from "/lovable-uploads/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
 import mpowerIcon from "@/assets/mpower-app-icon.png";
 
-const categories = ["All", "iOS", "Cross-Platform", "MERN"];
+const categories = ["All", "Full-Stack", "iOS", "Cross-Platform", "MERN"];
+
+type ContributionType = "frontend" | "backend" | "fullstack";
 
 // Define default projects as a fallback
 const defaultProjects = [
@@ -22,6 +24,7 @@ const defaultProjects = [
     websiteLink: "https://mpower.online/",
     isApp: true,
     category: "Cross-Platform",
+    contribution: "fullstack" as ContributionType,
     period: "2023 - Present"
   },
   {
@@ -32,6 +35,7 @@ const defaultProjects = [
     link: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
     isApp: true,
     category: "iOS",
+    contribution: "frontend" as ContributionType,
     period: "Nov 2020 - Present"
   },
   {
@@ -42,6 +46,7 @@ const defaultProjects = [
     link: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
     isApp: true,
     category: "iOS",
+    contribution: "frontend" as ContributionType,
     period: "Aug 2021 - Mar 2022"
   },
   {
@@ -52,6 +57,7 @@ const defaultProjects = [
     link: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
     isApp: true,
     category: "iOS",
+    contribution: "frontend" as ContributionType,
     period: "Jun 2022 - Apr 2023"
   },
   {
@@ -62,6 +68,7 @@ const defaultProjects = [
     link: "https://thetrackapp.com/",
     isApp: true,
     category: "iOS",
+    contribution: "frontend" as ContributionType,
     period: "Apr 2022 - May 2022"
   },
   {
@@ -72,6 +79,7 @@ const defaultProjects = [
     link: "https://admin.joinleaf.com/",
     isApp: false,
     category: "MERN",
+    contribution: "fullstack" as ContributionType,
     period: "Nov 2020 - Present"
   },
   {
@@ -82,9 +90,34 @@ const defaultProjects = [
     link: "https://apps.apple.com/us/app/vooconnect/id1573637452",
     isApp: true,
     category: "iOS",
+    contribution: "fullstack" as ContributionType,
     period: "Mar 2023 - Apr 2023"
   }
 ];
+
+const getContributionBadge = (contribution: ContributionType) => {
+  switch (contribution) {
+    case "fullstack":
+      return {
+        label: "Full-Stack",
+        icon: <Layers size={12} />,
+        className: "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-400 border border-purple-500/30"
+      };
+    case "backend":
+      return {
+        label: "Backend",
+        icon: <Server size={12} />,
+        className: "bg-green-500/20 text-green-400 border border-green-500/30"
+      };
+    case "frontend":
+    default:
+      return {
+        label: "Frontend",
+        icon: <Monitor size={12} />,
+        className: "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+      };
+  }
+};
 
 const Projects = () => {
   const [projects, setProjects] = useState(defaultProjects);
@@ -100,6 +133,8 @@ const Projects = () => {
 
   const filteredProjects = activeFilter === "All" 
     ? projects 
+    : activeFilter === "Full-Stack"
+    ? projects.filter(p => p.contribution === "fullstack")
     : projects.filter(p => p.category === activeFilter);
 
   return (
@@ -165,10 +200,19 @@ const Projects = () => {
                 />
               </div>
               <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded">
                     {project.category}
                   </span>
+                  {project.contribution && (() => {
+                    const badge = getContributionBadge(project.contribution);
+                    return (
+                      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded ${badge.className}`}>
+                        {badge.icon}
+                        {badge.label}
+                      </span>
+                    );
+                  })()}
                 </div>
                 <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
                 <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4">{project.description}</p>
