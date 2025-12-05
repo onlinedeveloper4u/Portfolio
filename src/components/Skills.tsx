@@ -33,9 +33,9 @@ const Skills = () => {
       color: "from-purple-500 to-pink-500",
       skills: [
         { name: "RESTful APIs", level: 5, description: "API design" },
+        { name: "Strapi", level: 4, description: "Headless CMS" },
         { name: "Authentication", level: 4, description: "JWT & OAuth" },
         { name: "Database Design", level: 4, description: "Schema optimization" },
-        { name: "Third-party Integration", level: 5, description: "External APIs" },
         { name: "Real-time Features", level: 4, description: "WebSocket & Socket.io" }
       ]
     },
