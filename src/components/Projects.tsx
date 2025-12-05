@@ -14,8 +14,8 @@ const categories = ["All", "iOS", "Cross-Platform", "MERN"];
 const defaultProjects = [
   {
     title: "MPower Pro",
-    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. A creative platform that builds more than tracks - it builds you. Produce and record songs with multitrack DAW, add harmonies and effects, create instant music videos. Connect with rappers, singers, and producers globally. Features daily mood check-ins, goal tracking, challenges, masterclasses, and AI guidance. Seven apps in one - fusing music creation, collaboration, and personal development into one powerhouse platform.",
-    technologies: "iOS, Android, React Native, Strapi, AI Integration",
+    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. Contributed to both frontend (React Native) and backend (Strapi CMS). A creative platform that builds more than tracks - it builds you. Produce and record songs with multitrack DAW, add harmonies and effects, create instant music videos. Connect with rappers, singers, and producers globally. Features daily mood check-ins, goal tracking, challenges, masterclasses, and AI guidance. Seven apps in one - fusing music creation, collaboration, and personal development into one powerhouse platform.",
+    technologies: "iOS, Android, React Native, Strapi Backend, AI Integration",
     imageUrl: mpowerIcon,
     link: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
     playStoreLink: "https://play.google.com/store/apps/details?id=com.mpower.online",
@@ -76,8 +76,8 @@ const defaultProjects = [
   },
   {
     title: "Vooconnect",
-    description: "Vooconnect is an all-in-one social networking platform designed to connect users through a variety of interactive features. The app offers functionalities such as full-screen posts, live streaming, chat with walkie-talkie capabilities, and a marketplace for local buying and selling. Users can also subscribe to content creators for exclusive access.",
-    technologies: "iOS, Swift, SwiftUI, Node.js, MongoDB, REST APIs",
+    description: "Vooconnect is an all-in-one social networking platform designed to connect users through a variety of interactive features. Contributed to both iOS app development and Node.js backend APIs. The app offers functionalities such as full-screen posts, live streaming, chat with walkie-talkie capabilities, and a marketplace for local buying and selling. Users can also subscribe to content creators for exclusive access.",
+    technologies: "iOS, Swift, SwiftUI, Node.js Backend, MongoDB, REST APIs",
     imageUrl: vooconnectIcon,
     link: "https://apps.apple.com/us/app/vooconnect/id1573637452",
     isApp: true,
