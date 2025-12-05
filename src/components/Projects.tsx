@@ -1,13 +1,14 @@
-
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Code, Smartphone } from "lucide-react";
+import { Code, Smartphone, Globe, Filter } from "lucide-react";
 import leafIcon from "/lovable-uploads/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
 import ombiIcon from "/lovable-uploads/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
 import creatorIcon from "/lovable-uploads/49782510-2ca3-4464-acd4-d75f002421ba.png";
 import trackIcon from "/lovable-uploads/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png";
 import vooconnectIcon from "/lovable-uploads/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
 import mpowerIcon from "@/assets/mpower-app-icon.png";
+
+const categories = ["All", "iOS", "Cross-Platform", "MERN"];
 
 // Define default projects as a fallback
 const defaultProjects = [
@@ -87,6 +88,7 @@ const defaultProjects = [
 
 const Projects = () => {
   const [projects, setProjects] = useState(defaultProjects);
+  const [activeFilter, setActiveFilter] = useState("All");
 
   useEffect(() => {
     // Load projects from localStorage if available
@@ -95,6 +97,10 @@ const Projects = () => {
       setProjects(JSON.parse(storedProjects));
     }
   }, []);
+
+  const filteredProjects = activeFilter === "All" 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
 
   return (
     <section id="projects" className="py-20 px-4 bg-gradient-to-br from-background to-accent/5">
@@ -116,14 +122,39 @@ const Projects = () => {
           </p>
         </motion.div>
 
+        {/* Category Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true }}
+          className="flex flex-wrap justify-center gap-3 mb-10"
+        >
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveFilter(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeFilter === category
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-accent/10 text-accent-foreground hover:bg-accent/20"
+              }`}
+            >
+              {category === "All" && <Filter size={14} className="inline mr-2" />}
+              {category}
+            </button>
+          ))}
+        </motion.div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <motion.div
-              key={index}
+              key={project.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
+              layout
               className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-accent/10 group"
             >
               <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
@@ -134,8 +165,13 @@ const Projects = () => {
                 />
               </div>
               <div className="p-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded">
+                    {project.category}
+                  </span>
+                </div>
                 <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">{project.description}</p>
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4">{project.description}</p>
                 <div className="mb-4">
                   <span className="text-xs font-medium bg-accent/10 text-accent-foreground px-3 py-1 rounded-full">
                     {project.technologies}
@@ -163,6 +199,9 @@ const Projects = () => {
                       className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                     >
                       <span>Play Store</span>
+                      <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
+                        <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
+                      </svg>
                     </a>
                   )}
                   {project.websiteLink && (
@@ -173,6 +212,7 @@ const Projects = () => {
                       className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                     >
                       <span>Website</span>
+                      <Globe size={14} />
                     </a>
                   )}
                 </div>
