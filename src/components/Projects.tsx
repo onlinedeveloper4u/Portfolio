@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server } from "lucide-react";
+import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server, ChevronDown, ChevronUp } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -128,6 +128,151 @@ const getContributionBadge = (contribution: ContributionType) => {
   }
 };
 
+const MAX_DESCRIPTION_LENGTH = 150;
+
+const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; index: number }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const shouldTruncate = project.description.length > MAX_DESCRIPTION_LENGTH;
+  const displayDescription = isExpanded || !shouldTruncate 
+    ? project.description 
+    : project.description.slice(0, MAX_DESCRIPTION_LENGTH) + "...";
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9, y: -20 }}
+      transition={{ 
+        duration: 0.4, 
+        delay: index * 0.08,
+        type: "spring",
+        stiffness: 200,
+        damping: 25
+      }}
+      className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-accent/10 group"
+    >
+      <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
+        <img 
+          src={project.imageUrl} 
+          alt={project.title} 
+          className="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 rounded-2xl shadow-lg"
+        />
+      </div>
+      <div className="p-6">
+        <div className="flex items-center gap-2 mb-2 flex-wrap">
+          <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded">
+            {project.category}
+          </span>
+          {project.contribution && (() => {
+            const badge = getContributionBadge(project.contribution);
+            return (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <motion.span 
+                      className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded cursor-help ${badge.className}`}
+                      whileHover={{ 
+                        scale: 1.1,
+                        boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)"
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                      <motion.span
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                      >
+                        {badge.icon}
+                      </motion.span>
+                      {badge.label}
+                    </motion.span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-xs text-center">
+                    <p>{badge.tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })()}
+        </div>
+        <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
+        
+        {/* Description with Read More */}
+        <div className="mb-4">
+          <motion.p 
+            className="text-muted-foreground text-sm leading-relaxed"
+            layout
+          >
+            {displayDescription}
+          </motion.p>
+          {shouldTruncate && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+            >
+              {isExpanded ? (
+                <>
+                  Read Less <ChevronUp size={14} />
+                </>
+              ) : (
+                <>
+                  Read More <ChevronDown size={14} />
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <span className="text-xs font-medium bg-accent/10 text-accent-foreground px-3 py-1 rounded-full">
+            {project.technologies}
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <a 
+            href={project.link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+          >
+            <span>{project.isApp ? "App Store" : "View Project"}</span>
+            {project.isApp ? (
+              <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
+            ) : (
+              <Smartphone size={14} />
+            )}
+          </a>
+          {project.playStoreLink && (
+            <a 
+              href={project.playStoreLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              <span>Play Store</span>
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
+              </svg>
+            </a>
+          )}
+          {project.websiteLink && (
+            <a 
+              href={project.websiteLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              <span>Website</span>
+              <Globe size={14} />
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Projects = () => {
   const [projects, setProjects] = useState(defaultProjects);
   const [activeFilter, setActiveFilter] = useState("All");
@@ -175,9 +320,11 @@ const Projects = () => {
           className="flex flex-wrap justify-center gap-3 mb-10"
         >
           {categories.map((category) => (
-            <button
+            <motion.button
               key={category}
               onClick={() => setActiveFilter(category)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 activeFilter === category
                   ? "bg-primary text-primary-foreground shadow-md"
@@ -186,115 +333,17 @@ const Projects = () => {
             >
               {category === "All" && <Filter size={14} className="inline mr-2" />}
               {category}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              layout
-              className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-accent/10 group"
-            >
-              <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
-                <img 
-                  src={project.imageUrl} 
-                  alt={project.title} 
-                  className="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 rounded-2xl shadow-lg"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded">
-                    {project.category}
-                  </span>
-                  {project.contribution && (() => {
-                    const badge = getContributionBadge(project.contribution);
-                    return (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <motion.span 
-                              className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded cursor-help ${badge.className}`}
-                              whileHover={{ 
-                                scale: 1.1,
-                                boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)"
-                              }}
-                              whileTap={{ scale: 0.95 }}
-                              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                            >
-                              <motion.span
-                                animate={{ rotate: [0, 10, -10, 0] }}
-                                transition={{ duration: 0.5, delay: 0.5 }}
-                              >
-                                {badge.icon}
-                              </motion.span>
-                              {badge.label}
-                            </motion.span>
-                          </TooltipTrigger>
-                          <TooltipContent side="top" className="max-w-xs text-center">
-                            <p>{badge.tooltip}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    );
-                  })()}
-                </div>
-                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-4">{project.description}</p>
-                <div className="mb-4">
-                  <span className="text-xs font-medium bg-accent/10 text-accent-foreground px-3 py-1 rounded-full">
-                    {project.technologies}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <a 
-                    href={project.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                  >
-                    <span>{project.isApp ? "App Store" : "View Project"}</span>
-                    {project.isApp ? (
-                      <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
-                    ) : (
-                      <Smartphone size={14} />
-                    )}
-                  </a>
-                  {project.playStoreLink && (
-                    <a 
-                      href={project.playStoreLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                    >
-                      <span>Play Store</span>
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                        <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
-                      </svg>
-                    </a>
-                  )}
-                  {project.websiteLink && (
-                    <a 
-                      href={project.websiteLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                    >
-                      <span>Website</span>
-                      <Globe size={14} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
+              <ProjectCard key={project.title} project={project} index={index} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );
