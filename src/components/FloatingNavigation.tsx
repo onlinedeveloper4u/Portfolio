@@ -16,8 +16,12 @@ const navigationItems = [
 
 const FloatingNavigation = () => {
   const [activeSection, setActiveSection] = useState("hero");
+  const [isVisible, setIsVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
+    let hideTimeout: NodeJS.Timeout;
+
     const handleScroll = () => {
       const sections = navigationItems.map(item => ({
         id: item.id,
@@ -33,13 +37,37 @@ const FloatingNavigation = () => {
           break;
         }
       }
+
+      // Show navigation on scroll
+      setIsVisible(true);
+      
+      // Clear existing timeout
+      clearTimeout(hideTimeout);
+      
+      // Hide after 2 seconds of no scrolling (unless hovered)
+      hideTimeout = setTimeout(() => {
+        if (!isHovered) {
+          setIsVisible(false);
+        }
+      }, 2000);
     };
 
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // Check initial position
     
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    // Show initially then hide after delay
+    setIsVisible(true);
+    hideTimeout = setTimeout(() => {
+      if (!isHovered) {
+        setIsVisible(false);
+      }
+    }, 3000);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(hideTimeout);
+    };
+  }, [isHovered]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -59,17 +87,34 @@ const FloatingNavigation = () => {
         top: "50%",
         transform: "translateY(-50%)"
       }}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setIsVisible(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        // Hide after a short delay when mouse leaves
+        setTimeout(() => {
+          if (!isHovered) {
+            setIsVisible(false);
+          }
+        }, 1500);
+      }}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.8, x: 100 }}
-        animate={{ opacity: 1, scale: 1, x: 0 }}
-        transition={{ 
-          duration: 0.6, 
-          delay: 0.5,
-          type: "spring",
-          stiffness: 100,
-          damping: 15
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ 
+          opacity: isVisible ? 1 : 0.15, 
+          x: isVisible ? 0 : 40,
+          scale: isVisible ? 1 : 0.9
         }}
+        transition={{ 
+          duration: 0.4, 
+          type: "spring",
+          stiffness: 150,
+          damping: 20
+        }}
+        whileHover={{ opacity: 1, x: 0, scale: 1 }}
       >
         {/* Glass morphism container */}
         <div className="relative flex flex-col gap-3 p-2 rounded-2xl bg-background/30 backdrop-blur-xl border border-border/20 shadow-2xl">
