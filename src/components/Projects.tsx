@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import leafIcon from "/lovable-uploads/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
 import ombiIcon from "/lovable-uploads/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
 import creatorIcon from "/lovable-uploads/49782510-2ca3-4464-acd4-d75f002421ba.png";
@@ -29,13 +35,13 @@ const defaultProjects = [
   },
   {
     title: "Leaf - Book Your Friends",
-    description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze! Whether you're the friend who always hosts or just getting into event planning, Leaf keeps event scheduling, task management, and social organizing all in one place. No more juggling multiple apps or endless text chains — Leaf turns coordinating plans into part of the fun. Import events from Partiful, Luma, Eventbrite, SeatGeek, and Fandango. Smart checklists, AI-generated descriptions, group scheduler, and micro-planner assistant help you focus on the fun while Leaf handles the details.",
-    technologies: "iOS, Swift, SwiftUI, AI Integration, Event Planning",
+    description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze! Contributed to both iOS app development and backend services including APIs, cron jobs, and cloud functions. Whether you're the friend who always hosts or just getting into event planning, Leaf keeps event scheduling, task management, and social organizing all in one place. Import events from Partiful, Luma, Eventbrite, SeatGeek, and Fandango. Smart checklists, AI-generated descriptions, group scheduler, and micro-planner assistant help you focus on the fun while Leaf handles the details.",
+    technologies: "iOS, Swift, SwiftUI, Node.js APIs, Cloud Functions, Cron Jobs, AI Integration",
     imageUrl: leafIcon,
     link: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
     isApp: true,
     category: "iOS",
-    contribution: "frontend" as ContributionType,
+    contribution: "fullstack" as ContributionType,
     period: "Nov 2020 - Present"
   },
   {
@@ -101,20 +107,23 @@ const getContributionBadge = (contribution: ContributionType) => {
       return {
         label: "Full-Stack",
         icon: <Layers size={12} />,
-        className: "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-400 border border-purple-500/30"
+        className: "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-400 border border-purple-500/30",
+        tooltip: "Contributed to both frontend UI/UX development and backend services including APIs, databases, and server-side logic"
       };
     case "backend":
       return {
         label: "Backend",
         icon: <Server size={12} />,
-        className: "bg-green-500/20 text-green-400 border border-green-500/30"
+        className: "bg-green-500/20 text-green-400 border border-green-500/30",
+        tooltip: "Contributed to backend development including APIs, databases, cloud functions, and server-side architecture"
       };
     case "frontend":
     default:
       return {
         label: "Frontend",
         icon: <Monitor size={12} />,
-        className: "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+        className: "bg-blue-500/20 text-blue-400 border border-blue-500/30",
+        tooltip: "Contributed to frontend development including UI design, user experience, and client-side functionality"
       };
   }
 };
@@ -207,10 +216,32 @@ const Projects = () => {
                   {project.contribution && (() => {
                     const badge = getContributionBadge(project.contribution);
                     return (
-                      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded ${badge.className}`}>
-                        {badge.icon}
-                        {badge.label}
-                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <motion.span 
+                              className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded cursor-help ${badge.className}`}
+                              whileHover={{ 
+                                scale: 1.1,
+                                boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)"
+                              }}
+                              whileTap={{ scale: 0.95 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                            >
+                              <motion.span
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 0.5, delay: 0.5 }}
+                              >
+                                {badge.icon}
+                              </motion.span>
+                              {badge.label}
+                            </motion.span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="max-w-xs text-center">
+                            <p>{badge.tooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     );
                   })()}
                 </div>
