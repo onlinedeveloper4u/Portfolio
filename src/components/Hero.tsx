@@ -1,6 +1,13 @@
-
 import { motion } from "framer-motion";
-import { Code, Briefcase, Mail, Download } from "lucide-react";
+import { Code, Download, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { generateCV } from "@/lib/cvGenerator";
 
 const Hero = () => {
   const containerVariants = {
@@ -18,8 +25,47 @@ const Hero = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  const handleDownloadCV = async (format: 'pdf' | 'docx') => {
+    await generateCV(format);
+  };
+
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-20 md:py-0 bg-gradient-to-br from-[#1a1a2e] to-[#16213e]">
+    <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-20 md:py-0 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] relative">
+      {/* Download CV Button - Fixed Top Right */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.5 }}
+        className="absolute top-6 right-6 z-10"
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              className="gap-2 bg-gradient-to-r from-[#58a6ff] to-[#88d1f1] text-[#0d1117] hover:from-[#88d1f1] hover:to-[#58a6ff] shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+            >
+              <Download size={18} />
+              Download CV
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-[#0d1117] border border-[#30363d] text-gray-200">
+            <DropdownMenuItem 
+              onClick={() => handleDownloadCV('pdf')}
+              className="cursor-pointer hover:bg-[#161b22] focus:bg-[#161b22] gap-2"
+            >
+              <FileText size={16} className="text-red-400" />
+              Download as PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => handleDownloadCV('docx')}
+              className="cursor-pointer hover:bg-[#161b22] focus:bg-[#161b22] gap-2"
+            >
+              <FileText size={16} className="text-blue-400" />
+              Download as DOCX
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </motion.div>
+
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -55,4 +101,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
