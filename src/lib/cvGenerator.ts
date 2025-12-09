@@ -1,6 +1,6 @@
 import html2pdf from 'html2pdf.js';
 
-interface CVData {
+export interface CVData {
   name: string;
   title: string;
   email: string;
@@ -30,7 +30,7 @@ interface CVData {
   }[];
 }
 
-const cvData: CVData = {
+export const cvData: CVData = {
   name: "Muhammad Aqib Rafiqe",
   title: "Senior Software Engineer",
   email: "muhammadaqibrafiqe@gmail.com",
@@ -122,12 +122,81 @@ const cvData: CVData = {
   ]
 };
 
-const generateCVHTML = (): string => {
+export type CVTheme = 'modern' | 'classic' | 'minimal' | 'executive' | 'creative';
+
+export interface ThemeConfig {
+  id: CVTheme;
+  name: string;
+  description: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  fontFamily: string;
+  previewBg: string;
+}
+
+export const cvThemes: ThemeConfig[] = [
+  {
+    id: 'modern',
+    name: 'Modern Blue',
+    description: 'Clean and professional with blue accents',
+    primaryColor: '#58a6ff',
+    secondaryColor: '#1a1a2e',
+    accentColor: '#88d1f1',
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    previewBg: 'linear-gradient(135deg, #58a6ff 0%, #88d1f1 100%)'
+  },
+  {
+    id: 'classic',
+    name: 'Classic Elegant',
+    description: 'Traditional and timeless design',
+    primaryColor: '#2c3e50',
+    secondaryColor: '#1a252f',
+    accentColor: '#e74c3c',
+    fontFamily: "'Georgia', 'Times New Roman', serif",
+    previewBg: 'linear-gradient(135deg, #2c3e50 0%, #3d566e 100%)'
+  },
+  {
+    id: 'minimal',
+    name: 'Minimal Dark',
+    description: 'Simple and focused on content',
+    primaryColor: '#6366f1',
+    secondaryColor: '#18181b',
+    accentColor: '#a5b4fc',
+    fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+    previewBg: 'linear-gradient(135deg, #6366f1 0%, #a5b4fc 100%)'
+  },
+  {
+    id: 'executive',
+    name: 'Executive Gold',
+    description: 'Premium look with gold accents',
+    primaryColor: '#d4af37',
+    secondaryColor: '#1a1a1a',
+    accentColor: '#f5e6c8',
+    fontFamily: "'Playfair Display', Georgia, serif",
+    previewBg: 'linear-gradient(135deg, #d4af37 0%, #f5e6c8 100%)'
+  },
+  {
+    id: 'creative',
+    name: 'Creative Purple',
+    description: 'Bold and expressive design',
+    primaryColor: '#8b5cf6',
+    secondaryColor: '#1e1b4b',
+    accentColor: '#c4b5fd',
+    fontFamily: "'Poppins', 'Helvetica Neue', sans-serif",
+    previewBg: 'linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%)'
+  }
+];
+
+const generateCVHTML = (theme: ThemeConfig): string => {
+  const { primaryColor, secondaryColor, fontFamily } = theme;
+  
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="UTF-8">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -135,10 +204,10 @@ const generateCVHTML = (): string => {
           box-sizing: border-box;
         }
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: ${fontFamily};
           font-size: 11px;
           line-height: 1.5;
-          color: #1a1a2e;
+          color: ${secondaryColor};
           background: #ffffff;
         }
         .cv-container {
@@ -150,18 +219,18 @@ const generateCVHTML = (): string => {
           text-align: center;
           margin-bottom: 30px;
           padding-bottom: 20px;
-          border-bottom: 3px solid #58a6ff;
+          border-bottom: 3px solid ${primaryColor};
         }
         .name {
           font-size: 32px;
           font-weight: 700;
-          color: #1a1a2e;
+          color: ${secondaryColor};
           margin-bottom: 8px;
           letter-spacing: 1px;
         }
         .title {
           font-size: 16px;
-          color: #58a6ff;
+          color: ${primaryColor};
           font-weight: 600;
           margin-bottom: 15px;
         }
@@ -184,12 +253,12 @@ const generateCVHTML = (): string => {
         .section-title {
           font-size: 14px;
           font-weight: 700;
-          color: #1a1a2e;
+          color: ${secondaryColor};
           text-transform: uppercase;
           letter-spacing: 2px;
           margin-bottom: 12px;
           padding-bottom: 8px;
-          border-bottom: 2px solid #58a6ff;
+          border-bottom: 2px solid ${primaryColor};
         }
         .summary {
           color: #444;
@@ -205,7 +274,7 @@ const generateCVHTML = (): string => {
         }
         .skill-category-title {
           font-weight: 600;
-          color: #1a1a2e;
+          color: ${secondaryColor};
           margin-bottom: 5px;
         }
         .skill-items {
@@ -223,11 +292,11 @@ const generateCVHTML = (): string => {
         }
         .experience-title {
           font-weight: 700;
-          color: #1a1a2e;
+          color: ${secondaryColor};
           font-size: 13px;
         }
         .experience-period {
-          color: #58a6ff;
+          color: ${primaryColor};
           font-size: 10px;
           font-weight: 600;
         }
@@ -250,20 +319,20 @@ const generateCVHTML = (): string => {
           content: "▸";
           position: absolute;
           left: 0;
-          color: #58a6ff;
+          color: ${primaryColor};
         }
         .education-item {
           margin-bottom: 15px;
         }
         .education-degree {
           font-weight: 700;
-          color: #1a1a2e;
+          color: ${secondaryColor};
         }
         .education-institution {
           color: #555;
         }
         .education-period {
-          color: #58a6ff;
+          color: ${primaryColor};
           font-size: 10px;
         }
         .project-item {
@@ -271,7 +340,7 @@ const generateCVHTML = (): string => {
         }
         .project-name {
           font-weight: 700;
-          color: #1a1a2e;
+          color: ${secondaryColor};
         }
         .project-description {
           color: #555;
@@ -279,7 +348,7 @@ const generateCVHTML = (): string => {
         }
         .project-tech {
           font-size: 10px;
-          color: #58a6ff;
+          color: ${primaryColor};
           font-weight: 500;
         }
       </style>
@@ -357,8 +426,9 @@ const generateCVHTML = (): string => {
   `;
 };
 
-export const generateCV = async (format: 'pdf' | 'docx'): Promise<void> => {
-  const html = generateCVHTML();
+export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'modern'): Promise<void> => {
+  const theme = cvThemes.find(t => t.id === themeId) || cvThemes[0];
+  const html = generateCVHTML(theme);
   
   if (format === 'pdf') {
     const element = document.createElement('div');
@@ -367,7 +437,7 @@ export const generateCV = async (format: 'pdf' | 'docx'): Promise<void> => {
     
     const options = {
       margin: 0,
-      filename: 'Muhammad_Aqib_Rafiqe_CV.pdf',
+      filename: `Muhammad_Aqib_Rafiqe_CV_${theme.name.replace(/\s+/g, '_')}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -376,11 +446,10 @@ export const generateCV = async (format: 'pdf' | 'docx'): Promise<void> => {
     await html2pdf().set(options).from(element).save();
     document.body.removeChild(element);
   } else if (format === 'docx') {
-    // For DOCX, we create a downloadable HTML file that Word can open
     const blob = new Blob([html], { type: 'application/msword' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'Muhammad_Aqib_Rafiqe_CV.doc';
+    link.download = `Muhammad_Aqib_Rafiqe_CV_${theme.name.replace(/\s+/g, '_')}.doc`;
     link.click();
     URL.revokeObjectURL(link.href);
   }
