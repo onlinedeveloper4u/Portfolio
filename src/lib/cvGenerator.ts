@@ -188,7 +188,7 @@ export const cvThemes: ThemeConfig[] = [
   }
 ];
 
-const generateCVHTML = (theme: ThemeConfig): string => {
+export const generateCVHTML = (theme: ThemeConfig): string => {
   const { primaryColor, secondaryColor, fontFamily } = theme;
   
   return `

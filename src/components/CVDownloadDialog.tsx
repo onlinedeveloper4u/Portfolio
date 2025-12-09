@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, FileText, Check, Loader2, X } from "lucide-react";
+import { Download, FileText, Check, Loader2, Eye, X, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +9,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { generateCV, cvThemes, CVTheme, ThemeConfig } from "@/lib/cvGenerator";
+import { generateCV, cvThemes, CVTheme, ThemeConfig, generateCVHTML } from "@/lib/cvGenerator";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CVDownloadDialog = () => {
   const [selectedTheme, setSelectedTheme] = useState<CVTheme>('modern');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatingFormat, setGeneratingFormat] = useState<'pdf' | 'docx' | null>(null);
   const [open, setOpen] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewScale, setPreviewScale] = useState(0.6);
+
+  const currentTheme = useMemo(() => 
+    cvThemes.find(t => t.id === selectedTheme) || cvThemes[0],
+    [selectedTheme]
+  );
+
+  const previewHTML = useMemo(() => 
+    generateCVHTML(currentTheme),
+    [currentTheme]
+  );
 
   const handleDownload = async (format: 'pdf' | 'docx') => {
     setIsGenerating(true);
@@ -33,6 +46,9 @@ const CVDownloadDialog = () => {
       setGeneratingFormat(null);
     }
   };
+
+  const handleZoomIn = () => setPreviewScale(prev => Math.min(prev + 0.1, 1));
+  const handleZoomOut = () => setPreviewScale(prev => Math.max(prev - 0.1, 0.3));
 
   const ThemeCard = ({ theme }: { theme: ThemeConfig }) => {
     const isSelected = selectedTheme === theme.id;
@@ -78,69 +94,178 @@ const CVDownloadDialog = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          className="gap-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
-        >
-          <Download size={18} />
-          Download CV
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl bg-background border-border">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
-            <FileText className="text-primary" size={24} />
-            Choose CV Theme
-          </DialogTitle>
-        </DialogHeader>
-        
-        {/* Theme Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-4">
-          {cvThemes.map((theme) => (
-            <ThemeCard key={theme.id} theme={theme} />
-          ))}
-        </div>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            className="gap-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+          >
+            <Download size={18} />
+            Download CV
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-2xl bg-background border-border">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+              <FileText className="text-primary" size={24} />
+              Choose CV Theme
+            </DialogTitle>
+          </DialogHeader>
+          
+          {/* Theme Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-4">
+            {cvThemes.map((theme) => (
+              <ThemeCard key={theme.id} theme={theme} />
+            ))}
+          </div>
 
-        {/* Download Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
+          {/* Preview Button */}
           <Button
-            onClick={() => handleDownload('pdf')}
-            disabled={isGenerating}
-            className="flex-1 gap-2 bg-red-500 hover:bg-red-600 text-white"
+            onClick={() => setShowPreview(true)}
+            variant="outline"
+            className="w-full gap-2 border-primary/30 hover:bg-primary/10"
           >
-            {generatingFormat === 'pdf' ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Generating PDF...
-              </>
-            ) : (
-              <>
-                <FileText size={18} />
-                Download as PDF
-              </>
-            )}
+            <Eye size={18} />
+            Preview CV with {currentTheme.name} Theme
           </Button>
-          <Button
-            onClick={() => handleDownload('docx')}
-            disabled={isGenerating}
-            className="flex-1 gap-2 bg-blue-500 hover:bg-blue-600 text-white"
-          >
-            {generatingFormat === 'docx' ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Generating DOCX...
-              </>
-            ) : (
-              <>
-                <FileText size={18} />
-                Download as DOCX
-              </>
-            )}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+
+          {/* Download Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
+            <Button
+              onClick={() => handleDownload('pdf')}
+              disabled={isGenerating}
+              className="flex-1 gap-2 bg-red-500 hover:bg-red-600 text-white"
+            >
+              {generatingFormat === 'pdf' ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Generating PDF...
+                </>
+              ) : (
+                <>
+                  <FileText size={18} />
+                  Download as PDF
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={() => handleDownload('docx')}
+              disabled={isGenerating}
+              className="flex-1 gap-2 bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              {generatingFormat === 'docx' ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Generating DOCX...
+                </>
+              ) : (
+                <>
+                  <FileText size={18} />
+                  Download as DOCX
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* CV Preview Modal */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 overflow-hidden">
+          <div className="flex flex-col h-full">
+            {/* Preview Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border bg-card">
+              <div className="flex items-center gap-3">
+                <FileText className="text-primary" size={24} />
+                <div>
+                  <h3 className="font-bold text-foreground">CV Preview</h3>
+                  <p className="text-xs text-muted-foreground">Theme: {currentTheme.name}</p>
+                </div>
+              </div>
+              
+              {/* Zoom Controls */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleZoomOut}
+                  disabled={previewScale <= 0.3}
+                  className="h-8 w-8"
+                >
+                  <ZoomOut size={16} />
+                </Button>
+                <span className="text-sm text-muted-foreground min-w-[50px] text-center">
+                  {Math.round(previewScale * 100)}%
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleZoomIn}
+                  disabled={previewScale >= 1}
+                  className="h-8 w-8"
+                >
+                  <ZoomIn size={16} />
+                </Button>
+              </div>
+
+              {/* Download from Preview */}
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => handleDownload('pdf')}
+                  disabled={isGenerating}
+                  size="sm"
+                  className="gap-1 bg-red-500 hover:bg-red-600 text-white"
+                >
+                  {generatingFormat === 'pdf' ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Download size={14} />
+                  )}
+                  PDF
+                </Button>
+                <Button
+                  onClick={() => handleDownload('docx')}
+                  disabled={isGenerating}
+                  size="sm"
+                  className="gap-1 bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  {generatingFormat === 'docx' ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Download size={14} />
+                  )}
+                  DOCX
+                </Button>
+              </div>
+            </div>
+
+            {/* Preview Content */}
+            <ScrollArea className="flex-1 bg-muted/30">
+              <div className="p-8 flex justify-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white rounded-lg shadow-2xl overflow-hidden"
+                  style={{ 
+                    transform: `scale(${previewScale})`,
+                    transformOrigin: 'top center',
+                    width: '800px'
+                  }}
+                >
+                  <iframe
+                    srcDoc={previewHTML}
+                    className="w-full border-0"
+                    style={{ height: '1100px' }}
+                    title="CV Preview"
+                  />
+                </motion.div>
+              </div>
+            </ScrollArea>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
