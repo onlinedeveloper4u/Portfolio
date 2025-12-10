@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Download, Code, Smartphone } from "lucide-react";
+import { Code, Smartphone } from "lucide-react";
+import CVDownloadDialog from "./CVDownloadDialog";
 
 const CVDownloads = () => {
   const containerVariants = {
@@ -61,17 +62,10 @@ const CVDownloads = () => {
             <p className="text-muted-foreground mb-6">
               Full-stack development expertise with MongoDB, Express.js, React, and Node.js.
             </p>
-            <motion.a
-              href="https://rxresu.me/onlinedeveloper4u/aqib-mern-rxresu"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 w-full justify-center"
-            >
-              <Download size={18} />
-              Download MERN CV
-            </motion.a>
+            <CVDownloadDialog 
+              triggerClassName="w-full justify-center"
+              triggerText="Download MERN CV"
+            />
           </motion.div>
 
           <motion.div
@@ -87,17 +81,10 @@ const CVDownloads = () => {
             <p className="text-muted-foreground mb-6">
               Native iOS development with Swift, UIKit, and modern iOS frameworks.
             </p>
-            <motion.a
-              href="https://rxresu.me/onlinedeveloper4u/aqib-ios-rxresu"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 w-full justify-center"
-            >
-              <Download size={18} />
-              Download iOS CV
-            </motion.a>
+            <CVDownloadDialog 
+              triggerClassName="w-full justify-center"
+              triggerText="Download iOS CV"
+            />
           </motion.div>
         </motion.div>
       </div>
