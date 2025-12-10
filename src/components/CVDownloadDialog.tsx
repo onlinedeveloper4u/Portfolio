@@ -13,7 +13,12 @@ import { generateCV, cvThemes, CVTheme, ThemeConfig, generateCVHTML, portfolioDa
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const CVDownloadDialog = () => {
+interface CVDownloadDialogProps {
+  triggerClassName?: string;
+  triggerText?: string;
+}
+
+const CVDownloadDialog = ({ triggerClassName = "", triggerText = "Download CV" }: CVDownloadDialogProps) => {
   const [selectedTheme, setSelectedTheme] = useState<CVTheme>('modern');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatingFormat, setGeneratingFormat] = useState<'pdf' | 'docx' | null>(null);
@@ -98,10 +103,10 @@ const CVDownloadDialog = () => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button 
-            className="gap-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+            className={`gap-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 font-semibold ${triggerClassName}`}
           >
             <Download size={18} />
-            Download CV
+            {triggerText}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-2xl bg-background border-border">
