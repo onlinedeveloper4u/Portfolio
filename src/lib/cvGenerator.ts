@@ -1,6 +1,6 @@
 import html2pdf from 'html2pdf.js';
 
-// Real portfolio data extracted from components
+// Complete portfolio data from actual portfolio components
 export const portfolioData = {
   name: "Muhammad Aqib Rafiqe",
   title: "Senior Software Engineer",
@@ -14,19 +14,19 @@ export const portfolioData = {
   skills: [
     {
       category: "iOS Development",
-      items: ["Swift", "SwiftUI", "UIKit", "Core Data", "Core Animation", "Push Notifications", "In-App Purchases", "REST APIs"]
+      items: ["Swift", "SwiftUI", "UIKit", "Core Data", "Core Animation", "Push Notifications", "In-App Purchases", "REST APIs", "AVFoundation"]
     },
     {
       category: "Cross-Platform",
-      items: ["React Native", "Expo", "Redux", "React Navigation"]
+      items: ["React Native", "Expo", "Redux", "React Navigation", "TypeScript"]
     },
     {
       category: "MERN Stack",
-      items: ["MongoDB", "Express.js", "React.js", "Node.js", "Redux Toolkit", "TypeScript"]
+      items: ["MongoDB", "Express.js", "React.js", "Node.js", "Redux Toolkit", "TypeScript", "Next.js"]
     },
     {
       category: "Backend & APIs",
-      items: ["RESTful APIs", "GraphQL", "Strapi CMS", "Firebase", "Cloud Functions", "WebSocket", "Socket.io"]
+      items: ["RESTful APIs", "GraphQL", "Strapi CMS", "Firebase", "Cloud Functions", "WebSocket", "Socket.io", "Cron Jobs"]
     },
     {
       category: "AI & Innovation",
@@ -34,21 +34,32 @@ export const portfolioData = {
     },
     {
       category: "Tools & Platforms",
-      items: ["Git", "Xcode", "VS Code", "Figma", "Jira", "App Store Connect", "TestFlight"]
+      items: ["Git", "Xcode", "VS Code", "Figma", "Jira", "App Store Connect", "TestFlight", "Play Store Console"]
     }
   ],
   
   experience: [
+    {
+      title: "Freelancer",
+      company: "Self-employed",
+      location: "Remote",
+      period: "Oct 2024 - Present",
+      description: [
+        "iOS development using Swift, SwiftUI, and UIKit for various clients",
+        "MERN stack development and cross-platform React Native solutions",
+        "Building scalable web applications and mobile apps"
+      ]
+    },
     {
       title: "Senior iOS Developer",
       company: "iParagons",
       location: "Gujrat, Pakistan",
       period: "Jul 2024 - Present",
       description: [
-        "Built Leaf iOS app - AI-powered event planning app using Swift, SwiftUI, and Core Data",
+        "Built Leaf iOS app - AI-powered event planning app using Swift, SwiftUI, and Core Data with backend integrations",
         "Developed backend services including Node.js APIs, cron jobs, and cloud functions",
         "Integrated third-party APIs from Partiful, Luma, Eventbrite, SeatGeek, and Fandango",
-        "Implemented AI-driven features using OpenAI APIs for event description generation"
+        "Implemented AI-driven features using OpenAI APIs for event description generation and micro-planner assistant"
       ]
     },
     {
@@ -58,9 +69,9 @@ export const portfolioData = {
       period: "Nov 2022 - Present",
       description: [
         "Full-stack web development using MongoDB, Express.js, React.js, and Node.js",
-        "Built admin dashboards with analytics and real-time data management",
+        "Built admin dashboards with analytics, reporting tools, and real-time data management",
         "Developed REST APIs integrated with mobile applications",
-        "Implemented user management, reporting tools, and data visualization"
+        "Implemented user management systems and data visualization features"
       ]
     },
     {
@@ -69,10 +80,10 @@ export const portfolioData = {
       location: "Gujrat, Pakistan",
       period: "Nov 2020 - Jun 2024",
       description: [
-        "Designed Home Tab features including location views and multi-select 'Make Plans' flow",
-        "Developed real-time In-App Notifications and Collections module",
+        "Designed Home Tab features including location views, people views, and multi-select 'Make Plans' flow",
+        "Developed real-time In-App Notifications module and Collections module",
         "Built Explore Page with advanced filters and Custom Community Calendar",
-        "Implemented Split the Bill functionality and Edit Profile module"
+        "Implemented Split the Bill functionality, Edit Profile module, and performance optimizations"
       ]
     },
     {
@@ -81,10 +92,9 @@ export const portfolioData = {
       location: "Remote",
       period: "Jul 2021 - May 2023",
       description: [
-        "iOS development using Swift, SwiftUI, and UIKit for various clients",
-        "Full-stack MERN development and cross-platform React Native solutions",
+        "Delivered multiple iOS apps including Ombi, Creator Music Studio, and The Track App",
         "Built Vooconnect social platform with iOS frontend and Node.js backend",
-        "Delivered apps including Ombi, Creator Music Studio, and The Track App"
+        "Cross-platform React Native solutions and MERN stack development"
       ]
     }
   ],
@@ -99,39 +109,53 @@ export const portfolioData = {
   
   projects: [
     {
+      name: "MPower Pro",
+      description: "Cross-platform music creation app with multitrack DAW, AI guidance, daily mood check-ins, goal tracking, and social collaboration. Seven apps in one platform.",
+      technologies: "iOS, Android, React Native, Strapi Backend, AI",
+      contribution: "Full-Stack",
+      link: "apps.apple.com/app/mpower-pro/id6443431786"
+    },
+    {
       name: "Leaf - Book Your Friends",
-      description: "AI-powered event planner for organizing group gatherings with smart checklists, group scheduler, and event import features",
+      description: "AI-powered event planner with smart checklists, group scheduler, and event import from Partiful, Luma, Eventbrite, SeatGeek, and Fandango.",
       technologies: "iOS, Swift, SwiftUI, Node.js, Cloud Functions, AI",
       contribution: "Full-Stack",
       link: "apps.apple.com/app/leaf-book-your-friends/id1040588046"
     },
     {
-      name: "MPower Pro",
-      description: "Cross-platform music creation app with multitrack DAW, AI guidance, and social collaboration features",
-      technologies: "React Native, Strapi, iOS, Android",
-      contribution: "Full-Stack",
-      link: "apps.apple.com/app/mpower-pro/id6443431786"
-    },
-    {
       name: "Vooconnect",
-      description: "Social networking platform with live streaming, chat, marketplace, and content subscription features",
-      technologies: "iOS, Swift, Node.js, MongoDB",
+      description: "Social networking platform with full-screen posts, live streaming, chat with walkie-talkie, marketplace, and content creator subscriptions.",
+      technologies: "iOS, Swift, SwiftUI, Node.js, MongoDB",
       contribution: "Full-Stack",
       link: "apps.apple.com/app/vooconnect/id1573637452"
     },
     {
+      name: "Leaf Admin Dashboard",
+      description: "Admin dashboard for Leaf iOS app with user management, analytics, event monitoring, and comprehensive reporting tools.",
+      technologies: "React, Node.js, MongoDB, Express, Analytics",
+      contribution: "Full-Stack",
+      link: "admin.joinleaf.com"
+    },
+    {
       name: "Ombi - Preview Restaurants",
-      description: "iOS app for previewing and booking restaurants through immersive video experiences",
+      description: "iOS app for previewing and booking restaurants through immersive video experiences showcasing atmosphere and cuisine.",
       technologies: "iOS, Swift, UIKit, Video Streaming",
       contribution: "Frontend",
       link: "apps.apple.com/app/ombi/id1598753264"
     },
     {
       name: "Creator Music Studio",
-      description: "All-in-one music creation app with AI-powered lyrics, melody generation, and Auto-Tune effects",
+      description: "All-in-one music creation app with AI-powered lyrics, melody generation, Auto-Tune effects, and Creator Feed for sharing tracks.",
       technologies: "iOS, Swift, Audio Production, AI",
       contribution: "Frontend",
       link: "apps.apple.com/app/creator-music-studio/id6445974873"
+    },
+    {
+      name: "The Track App",
+      description: "Fast, minimalistic calendar and scheduling platform with real-time event syncing and intuitive user interface.",
+      technologies: "Swift, SwiftUI, Event Planning",
+      contribution: "Frontend",
+      link: "thetrackapp.com"
     }
   ],
   
@@ -163,7 +187,7 @@ export const cvThemes: ThemeConfig[] = [
     primaryColor: '#2563eb',
     secondaryColor: '#1e3a5f',
     accentColor: '#60a5fa',
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
+    fontFamily: "'Segoe UI', Arial, sans-serif",
     previewBg: 'linear-gradient(135deg, #2563eb 0%, #60a5fa 100%)'
   },
   {
@@ -193,7 +217,7 @@ export const cvThemes: ThemeConfig[] = [
     primaryColor: '#92400e',
     secondaryColor: '#451a03',
     accentColor: '#d97706',
-    fontFamily: "'Playfair Display', Georgia, serif",
+    fontFamily: "'Georgia', serif",
     previewBg: 'linear-gradient(135deg, #92400e 0%, #fbbf24 100%)'
   },
   {
@@ -203,188 +227,196 @@ export const cvThemes: ThemeConfig[] = [
     primaryColor: '#7c3aed',
     secondaryColor: '#4c1d95',
     accentColor: '#a78bfa',
-    fontFamily: "'Poppins', 'Helvetica Neue', sans-serif",
+    fontFamily: "'Segoe UI', sans-serif",
     previewBg: 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)'
   }
 ];
 
+// Print-optimized common styles
+const getPrintStyles = () => `
+  @page { margin: 0; size: A4; }
+  @media print {
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-size: 10pt; line-height: 1.4; color: #333; background: #fff; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; }
+`;
+
 // Generate different HTML layouts based on theme
 export const generateCVHTML = (theme: ThemeConfig): string => {
-  const { id, primaryColor, secondaryColor, accentColor, fontFamily } = theme;
+  const { id } = theme;
   const data = portfolioData;
-
-  // Common styles
-  const commonStyles = `
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: ${fontFamily}; font-size: 11px; line-height: 1.5; color: #333; background: #fff; }
-    .page { max-width: 800px; margin: 0 auto; }
-    a { color: ${primaryColor}; text-decoration: none; }
-  `;
 
   switch (id) {
     case 'modern':
-      return generateModernSidebarLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateModernSidebarLayout(data, theme);
     case 'classic':
-      return generateClassicLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateClassicLayout(data, theme);
     case 'minimal':
-      return generateMinimalLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateMinimalLayout(data, theme);
     case 'executive':
-      return generateExecutiveLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateExecutiveLayout(data, theme);
     case 'creative':
-      return generateCreativeLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateCreativeLayout(data, theme);
     default:
-      return generateModernSidebarLayout(data, primaryColor, secondaryColor, accentColor, fontFamily, commonStyles);
+      return generateModernSidebarLayout(data, theme);
   }
 };
 
-// Modern Sidebar Layout - Two columns with left sidebar
-function generateModernSidebarLayout(data: typeof portfolioData, primary: string, secondary: string, accent: string, font: string, common: string): string {
+// Modern Sidebar Layout - Two columns with left sidebar (TABLE-BASED for PDF)
+function generateModernSidebarLayout(data: typeof portfolioData, theme: ThemeConfig): string {
+  const { primaryColor, secondaryColor, accentColor } = theme;
+  
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      ${common}
-      .page { display: flex; min-height: 100%; }
-      .sidebar { width: 280px; background: ${secondary}; color: #fff; padding: 30px 20px; }
-      .main { flex: 1; padding: 30px; background: #fff; }
-      .photo-placeholder { width: 120px; height: 120px; border-radius: 50%; background: ${accent}; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; color: #fff; }
-      .sidebar h1 { font-size: 22px; text-align: center; margin-bottom: 5px; font-weight: 700; }
-      .sidebar .title { text-align: center; color: ${accent}; font-size: 12px; margin-bottom: 25px; font-weight: 500; }
-      .sidebar-section { margin-bottom: 20px; }
-      .sidebar-section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid ${accent}; padding-bottom: 5px; margin-bottom: 10px; color: ${accent}; }
-      .contact-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 10px; word-break: break-all; }
-      .contact-icon { width: 16px; height: 16px; background: ${accent}; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
-      .skill-category { margin-bottom: 12px; }
-      .skill-category-title { font-size: 10px; font-weight: 600; margin-bottom: 4px; color: #fff; }
-      .skill-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-      .skill-tag { background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 3px; font-size: 9px; }
-      .lang-item { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
-      .main h2 { font-size: 14px; color: ${secondary}; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid ${primary}; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px; }
-      .main h2:first-child { margin-top: 0; }
-      .summary { color: #555; line-height: 1.7; font-size: 11px; }
-      .exp-item { margin-bottom: 18px; }
-      .exp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
-      .exp-title { font-weight: 700; font-size: 12px; color: ${secondary}; }
-      .exp-period { font-size: 10px; color: ${primary}; font-weight: 600; }
-      .exp-company { color: #666; font-size: 11px; margin-bottom: 6px; }
-      .exp-list { list-style: none; padding-left: 0; }
-      .exp-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #555; font-size: 10px; }
-      .exp-list li:before { content: "▸"; position: absolute; left: 0; color: ${primary}; }
-      .project-item { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+      ${getPrintStyles()}
+      body { font-family: 'Segoe UI', Arial, sans-serif; }
+      .page { padding: 0; }
+      table.main-layout { width: 100%; border-collapse: collapse; }
+      .sidebar { width: 220px; background: ${secondaryColor}; color: #fff; padding: 25px 18px; vertical-align: top; }
+      .main-content { padding: 25px; vertical-align: top; background: #fff; }
+      .photo-circle { width: 100px; height: 100px; border-radius: 50%; background: ${accentColor}; margin: 0 auto 15px; text-align: center; line-height: 100px; font-size: 32px; font-weight: 700; color: #fff; }
+      .sidebar-name { font-size: 18px; text-align: center; font-weight: 700; margin-bottom: 3px; }
+      .sidebar-title { text-align: center; color: ${accentColor}; font-size: 11px; margin-bottom: 20px; }
+      .sidebar-section { margin-bottom: 18px; }
+      .sidebar-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid ${accentColor}; padding-bottom: 4px; margin-bottom: 10px; color: ${accentColor}; font-weight: 600; }
+      .contact-item { margin-bottom: 6px; font-size: 9px; word-break: break-all; }
+      .contact-icon { display: inline-block; width: 14px; height: 14px; background: ${accentColor}; border-radius: 2px; text-align: center; line-height: 14px; font-size: 8px; margin-right: 6px; vertical-align: middle; }
+      .skill-category { margin-bottom: 10px; }
+      .skill-category-title { font-size: 9px; font-weight: 600; margin-bottom: 3px; }
+      .skill-tag { display: inline-block; background: rgba(255,255,255,0.15); padding: 2px 5px; border-radius: 2px; font-size: 8px; margin: 1px 2px 1px 0; }
+      .lang-item { font-size: 9px; margin-bottom: 4px; }
+      .main-section-title { font-size: 13px; color: ${secondaryColor}; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid ${primaryColor}; padding-bottom: 4px; margin-bottom: 12px; margin-top: 18px; font-weight: 600; }
+      .main-section-title:first-child { margin-top: 0; }
+      .summary { color: #444; line-height: 1.6; font-size: 10px; }
+      .exp-item { margin-bottom: 14px; }
+      .exp-header { margin-bottom: 2px; }
+      .exp-title { font-weight: 700; font-size: 11px; color: ${secondaryColor}; display: inline; }
+      .exp-period { font-size: 9px; color: ${primaryColor}; font-weight: 600; float: right; }
+      .exp-company { color: #666; font-size: 10px; margin-bottom: 4px; }
+      .exp-list { padding-left: 15px; margin: 0; }
+      .exp-list li { margin-bottom: 2px; color: #555; font-size: 9px; }
+      .project-item { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
       .project-item:last-child { border-bottom: none; }
-      .project-name { font-weight: 700; color: ${secondary}; font-size: 11px; }
-      .project-contribution { display: inline-block; background: ${primary}; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 8px; margin-left: 8px; }
-      .project-desc { color: #555; font-size: 10px; margin: 3px 0; }
-      .project-tech { font-size: 9px; color: ${primary}; }
-      .edu-item { margin-bottom: 10px; }
-      .edu-degree { font-weight: 700; color: ${secondary}; font-size: 11px; }
-      .edu-school { color: #555; font-size: 10px; }
-      .edu-period { color: ${primary}; font-size: 10px; }
+      .project-name { font-weight: 700; color: ${secondaryColor}; font-size: 10px; display: inline; }
+      .project-badge { display: inline-block; background: ${primaryColor}; color: #fff; padding: 1px 5px; border-radius: 2px; font-size: 7px; margin-left: 6px; vertical-align: middle; }
+      .project-desc { color: #555; font-size: 9px; margin: 2px 0; }
+      .project-tech { font-size: 8px; color: ${primaryColor}; }
+      .edu-degree { font-weight: 700; color: ${secondaryColor}; font-size: 10px; }
+      .edu-school { color: #555; font-size: 9px; }
+      .edu-period { color: ${primaryColor}; font-size: 9px; }
     </style>
   </head><body>
     <div class="page">
-      <div class="sidebar">
-        <div class="photo-placeholder">${data.name.split(' ').map(n => n[0]).join('')}</div>
-        <h1>${data.name}</h1>
-        <div class="title">${data.title}</div>
-        
-        <div class="sidebar-section">
-          <h3>Contact</h3>
-          <div class="contact-item"><div class="contact-icon">✉</div>${data.email}</div>
-          <div class="contact-item"><div class="contact-icon">☎</div>${data.phone}</div>
-          <div class="contact-item"><div class="contact-icon">📍</div>${data.location}</div>
-          <div class="contact-item"><div class="contact-icon">in</div>${data.linkedin}</div>
-          <div class="contact-item"><div class="contact-icon">⌨</div>${data.github}</div>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3>Skills</h3>
-          ${data.skills.map(skill => `
-            <div class="skill-category">
-              <div class="skill-category-title">${skill.category}</div>
-              <div class="skill-tags">${skill.items.slice(0, 5).map(item => `<span class="skill-tag">${item}</span>`).join('')}</div>
+      <table class="main-layout">
+        <tr>
+          <td class="sidebar">
+            <div class="photo-circle">${data.name.split(' ').map(n => n[0]).join('')}</div>
+            <div class="sidebar-name">${data.name}</div>
+            <div class="sidebar-title">${data.title}</div>
+            
+            <div class="sidebar-section">
+              <div class="sidebar-section-title">Contact</div>
+              <div class="contact-item"><span class="contact-icon">✉</span>${data.email}</div>
+              <div class="contact-item"><span class="contact-icon">☎</span>${data.phone}</div>
+              <div class="contact-item"><span class="contact-icon">📍</span>${data.location}</div>
+              <div class="contact-item"><span class="contact-icon">in</span>${data.linkedin}</div>
+              <div class="contact-item"><span class="contact-icon">⌨</span>${data.github}</div>
             </div>
-          `).join('')}
-        </div>
-        
-        <div class="sidebar-section">
-          <h3>Languages</h3>
-          ${data.languages.map(lang => `<div class="lang-item"><span>${lang.name}</span><span>${lang.level}</span></div>`).join('')}
-        </div>
-      </div>
-      
-      <div class="main">
-        <h2>Professional Summary</h2>
-        <p class="summary">${data.summary}</p>
-        
-        <h2>Experience</h2>
-        ${data.experience.map(exp => `
-          <div class="exp-item">
-            <div class="exp-header">
-              <span class="exp-title">${exp.title}</span>
-              <span class="exp-period">${exp.period}</span>
+            
+            <div class="sidebar-section">
+              <div class="sidebar-section-title">Skills</div>
+              ${data.skills.map(skill => `
+                <div class="skill-category">
+                  <div class="skill-category-title">${skill.category}</div>
+                  <div>${skill.items.slice(0, 5).map(item => `<span class="skill-tag">${item}</span>`).join('')}</div>
+                </div>
+              `).join('')}
             </div>
-            <div class="exp-company">${exp.company} • ${exp.location}</div>
-            <ul class="exp-list">${exp.description.map(d => `<li>${d}</li>`).join('')}</ul>
-          </div>
-        `).join('')}
-        
-        <h2>Key Projects</h2>
-        ${data.projects.slice(0, 4).map(proj => `
-          <div class="project-item">
-            <span class="project-name">${proj.name}</span>
-            <span class="project-contribution">${proj.contribution}</span>
-            <div class="project-desc">${proj.description}</div>
-            <div class="project-tech">${proj.technologies}</div>
-          </div>
-        `).join('')}
-        
-        <h2>Education</h2>
-        ${data.education.map(edu => `
-          <div class="edu-item">
-            <div class="edu-degree">${edu.degree}</div>
-            <div class="edu-school">${edu.institution}</div>
-            <div class="edu-period">${edu.period}</div>
-          </div>
-        `).join('')}
-      </div>
+            
+            <div class="sidebar-section">
+              <div class="sidebar-section-title">Languages</div>
+              ${data.languages.map(lang => `<div class="lang-item">${lang.name} - ${lang.level}</div>`).join('')}
+            </div>
+          </td>
+          
+          <td class="main-content">
+            <div class="main-section-title">Professional Summary</div>
+            <p class="summary">${data.summary}</p>
+            
+            <div class="main-section-title">Experience</div>
+            ${data.experience.slice(0, 4).map(exp => `
+              <div class="exp-item">
+                <div class="exp-header">
+                  <span class="exp-title">${exp.title}</span>
+                  <span class="exp-period">${exp.period}</span>
+                </div>
+                <div class="exp-company">${exp.company} • ${exp.location}</div>
+                <ul class="exp-list">${exp.description.slice(0, 3).map(d => `<li>${d}</li>`).join('')}</ul>
+              </div>
+            `).join('')}
+            
+            <div class="main-section-title">Key Projects</div>
+            ${data.projects.slice(0, 5).map(proj => `
+              <div class="project-item">
+                <span class="project-name">${proj.name}</span>
+                <span class="project-badge">${proj.contribution}</span>
+                <div class="project-desc">${proj.description}</div>
+                <div class="project-tech">${proj.technologies}</div>
+              </div>
+            `).join('')}
+            
+            <div class="main-section-title">Education</div>
+            ${data.education.map(edu => `
+              <div>
+                <div class="edu-degree">${edu.degree}</div>
+                <div class="edu-school">${edu.institution}</div>
+                <div class="edu-period">${edu.period}</div>
+              </div>
+            `).join('')}
+          </td>
+        </tr>
+      </table>
     </div>
   </body></html>`;
 }
 
 // Classic Professional Layout - Traditional single column
-function generateClassicLayout(data: typeof portfolioData, primary: string, secondary: string, accent: string, font: string, common: string): string {
+function generateClassicLayout(data: typeof portfolioData, theme: ThemeConfig): string {
+  const { primaryColor, secondaryColor, accentColor } = theme;
+  
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <style>
-      ${common}
-      body { font-family: 'Source Sans 3', sans-serif; }
-      .page { padding: 40px 50px; }
-      .header { text-align: center; border-bottom: 3px double ${secondary}; padding-bottom: 20px; margin-bottom: 25px; }
-      .name { font-family: 'Libre Baskerville', serif; font-size: 28px; font-weight: 700; color: ${secondary}; letter-spacing: 3px; margin-bottom: 5px; }
-      .title { font-size: 14px; color: ${primary}; font-weight: 600; letter-spacing: 1px; margin-bottom: 12px; }
-      .contact-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 10px; color: #555; }
-      .contact-row span { display: flex; align-items: center; gap: 4px; }
-      .section { margin-bottom: 22px; }
-      .section-title { font-family: 'Libre Baskerville', serif; font-size: 13px; font-weight: 700; color: ${secondary}; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid ${accent}; padding-bottom: 6px; margin-bottom: 12px; }
-      .summary { text-align: justify; color: #444; line-height: 1.8; font-size: 11px; }
-      .exp-item { margin-bottom: 18px; }
-      .exp-row { display: flex; justify-content: space-between; align-items: baseline; }
-      .exp-title { font-weight: 700; font-size: 12px; color: ${secondary}; }
-      .exp-period { font-size: 10px; color: ${primary}; font-style: italic; }
-      .exp-company { color: #666; font-size: 11px; font-style: italic; margin-bottom: 6px; }
-      .exp-list { list-style: disc; padding-left: 20px; color: #555; font-size: 10px; }
-      .exp-list li { margin-bottom: 3px; }
-      .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-      .skill-group h4 { font-weight: 700; font-size: 10px; color: ${secondary}; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-      .skill-group p { font-size: 10px; color: #555; line-height: 1.6; }
-      .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-      .project-card { border: 1px solid #ddd; padding: 12px; }
-      .project-name { font-weight: 700; font-size: 11px; color: ${secondary}; margin-bottom: 4px; }
-      .project-type { font-size: 9px; color: ${primary}; font-weight: 600; margin-bottom: 4px; }
-      .project-desc { font-size: 9px; color: #555; line-height: 1.5; }
-      .edu-item { margin-bottom: 10px; }
-      .edu-degree { font-weight: 700; font-size: 11px; color: ${secondary}; }
-      .edu-details { font-size: 10px; color: #555; }
+      ${getPrintStyles()}
+      body { font-family: Georgia, 'Times New Roman', serif; }
+      .page { padding: 35px 45px; }
+      .header { text-align: center; border-bottom: 3px double ${secondaryColor}; padding-bottom: 18px; margin-bottom: 20px; }
+      .name { font-size: 26px; font-weight: 700; color: ${secondaryColor}; letter-spacing: 2px; margin-bottom: 4px; }
+      .title { font-size: 13px; color: ${primaryColor}; font-weight: 600; letter-spacing: 1px; margin-bottom: 10px; }
+      .contact-row { font-size: 9px; color: #555; }
+      .contact-row span { margin: 0 8px; }
+      .section { margin-bottom: 18px; }
+      .section-title { font-size: 12px; font-weight: 700; color: ${secondaryColor}; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid ${accentColor}; padding-bottom: 4px; margin-bottom: 10px; }
+      .summary { text-align: justify; color: #444; line-height: 1.7; font-size: 10px; }
+      .exp-item { margin-bottom: 14px; }
+      .exp-row { margin-bottom: 2px; }
+      .exp-title { font-weight: 700; font-size: 11px; color: ${secondaryColor}; }
+      .exp-period { font-size: 9px; color: ${primaryColor}; font-style: italic; float: right; }
+      .exp-company { color: #666; font-size: 10px; font-style: italic; margin-bottom: 4px; }
+      .exp-list { list-style: disc; padding-left: 18px; color: #555; font-size: 9px; margin: 0; }
+      .exp-list li { margin-bottom: 2px; }
+      .skills-table { width: 100%; }
+      .skills-table td { vertical-align: top; padding: 0 10px 10px 0; width: 33.33%; }
+      .skill-group-title { font-weight: 700; font-size: 9px; color: ${secondaryColor}; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+      .skill-group-items { font-size: 9px; color: #555; line-height: 1.5; }
+      .projects-table { width: 100%; }
+      .projects-table td { vertical-align: top; padding: 8px; width: 50%; border: 1px solid #ddd; }
+      .project-name { font-weight: 700; font-size: 10px; color: ${secondaryColor}; margin-bottom: 3px; }
+      .project-type { font-size: 8px; color: ${primaryColor}; font-weight: 600; margin-bottom: 3px; }
+      .project-desc { font-size: 8px; color: #555; line-height: 1.4; }
+      .edu-degree { font-weight: 700; font-size: 10px; color: ${secondaryColor}; }
+      .edu-details { font-size: 9px; color: #555; }
     </style>
   </head><body>
     <div class="page">
@@ -406,47 +438,68 @@ function generateClassicLayout(data: typeof portfolioData, primary: string, seco
       
       <div class="section">
         <div class="section-title">Professional Experience</div>
-        ${data.experience.map(exp => `
+        ${data.experience.slice(0, 4).map(exp => `
           <div class="exp-item">
             <div class="exp-row">
               <span class="exp-title">${exp.title}</span>
               <span class="exp-period">${exp.period}</span>
             </div>
             <div class="exp-company">${exp.company}, ${exp.location}</div>
-            <ul class="exp-list">${exp.description.map(d => `<li>${d}</li>`).join('')}</ul>
+            <ul class="exp-list">${exp.description.slice(0, 3).map(d => `<li>${d}</li>`).join('')}</ul>
           </div>
         `).join('')}
       </div>
       
       <div class="section">
         <div class="section-title">Technical Skills</div>
-        <div class="skills-grid">
-          ${data.skills.map(skill => `
-            <div class="skill-group">
-              <h4>${skill.category}</h4>
-              <p>${skill.items.join(', ')}</p>
-            </div>
-          `).join('')}
-        </div>
+        <table class="skills-table">
+          <tr>
+            ${data.skills.slice(0, 3).map(skill => `
+              <td>
+                <div class="skill-group-title">${skill.category}</div>
+                <div class="skill-group-items">${skill.items.join(', ')}</div>
+              </td>
+            `).join('')}
+          </tr>
+          <tr>
+            ${data.skills.slice(3, 6).map(skill => `
+              <td>
+                <div class="skill-group-title">${skill.category}</div>
+                <div class="skill-group-items">${skill.items.join(', ')}</div>
+              </td>
+            `).join('')}
+          </tr>
+        </table>
       </div>
       
       <div class="section">
         <div class="section-title">Notable Projects</div>
-        <div class="projects-grid">
-          ${data.projects.slice(0, 4).map(proj => `
-            <div class="project-card">
-              <div class="project-name">${proj.name}</div>
-              <div class="project-type">${proj.contribution} Development</div>
-              <div class="project-desc">${proj.description}</div>
-            </div>
-          `).join('')}
-        </div>
+        <table class="projects-table">
+          <tr>
+            ${data.projects.slice(0, 2).map(proj => `
+              <td>
+                <div class="project-name">${proj.name}</div>
+                <div class="project-type">${proj.contribution} Development</div>
+                <div class="project-desc">${proj.description}</div>
+              </td>
+            `).join('')}
+          </tr>
+          <tr>
+            ${data.projects.slice(2, 4).map(proj => `
+              <td>
+                <div class="project-name">${proj.name}</div>
+                <div class="project-type">${proj.contribution} Development</div>
+                <div class="project-desc">${proj.description}</div>
+              </td>
+            `).join('')}
+          </tr>
+        </table>
       </div>
       
       <div class="section">
         <div class="section-title">Education</div>
         ${data.education.map(edu => `
-          <div class="edu-item">
+          <div>
             <div class="edu-degree">${edu.degree}</div>
             <div class="edu-details">${edu.institution} | ${edu.period}</div>
           </div>
@@ -457,38 +510,38 @@ function generateClassicLayout(data: typeof portfolioData, primary: string, seco
 }
 
 // Minimal Clean Layout - Ultra clean with whitespace
-function generateMinimalLayout(data: typeof portfolioData, primary: string, secondary: string, accent: string, font: string, common: string): string {
+function generateMinimalLayout(data: typeof portfolioData, theme: ThemeConfig): string {
+  const { primaryColor, secondaryColor, accentColor } = theme;
+  
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      ${common}
-      body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; }
-      .page { padding: 50px 60px; max-width: 750px; }
-      .header { margin-bottom: 35px; }
-      .name { font-size: 32px; font-weight: 700; color: ${secondary}; letter-spacing: -0.5px; margin-bottom: 4px; }
-      .title { font-size: 14px; color: ${accent}; font-weight: 500; margin-bottom: 15px; }
-      .contact-line { display: flex; gap: 20px; font-size: 10px; color: #666; flex-wrap: wrap; }
-      .divider { width: 50px; height: 3px; background: ${primary}; margin: 30px 0; }
-      .section { margin-bottom: 28px; }
-      .section-title { font-size: 10px; font-weight: 700; color: ${primary}; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
-      .summary { font-size: 12px; color: #444; line-height: 1.8; font-weight: 300; }
-      .exp-item { margin-bottom: 22px; position: relative; padding-left: 15px; }
-      .exp-item:before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; background: ${primary}; border-radius: 50%; }
-      .exp-header { margin-bottom: 5px; }
-      .exp-title { font-size: 13px; font-weight: 600; color: ${secondary}; }
-      .exp-meta { font-size: 10px; color: ${accent}; margin-bottom: 8px; }
-      .exp-list { list-style: none; font-size: 10px; color: #555; }
-      .exp-list li { margin-bottom: 4px; padding-left: 12px; position: relative; }
-      .exp-list li:before { content: '—'; position: absolute; left: 0; color: ${accent}; }
-      .skills-row { display: flex; flex-wrap: wrap; gap: 8px; }
-      .skill-pill { background: #f5f5f5; padding: 5px 12px; border-radius: 20px; font-size: 10px; color: #444; }
-      .projects-list { display: flex; flex-direction: column; gap: 12px; }
-      .project-row { display: flex; gap: 15px; align-items: baseline; }
-      .project-name { font-weight: 600; font-size: 11px; color: ${secondary}; min-width: 180px; }
-      .project-desc { font-size: 10px; color: #666; flex: 1; }
-      .edu-row { display: flex; justify-content: space-between; align-items: baseline; }
-      .edu-degree { font-weight: 600; font-size: 11px; color: ${secondary}; }
-      .edu-details { font-size: 10px; color: #666; }
+      ${getPrintStyles()}
+      body { font-family: 'Helvetica Neue', Arial, sans-serif; }
+      .page { padding: 45px 55px; }
+      .header { margin-bottom: 25px; }
+      .name { font-size: 28px; font-weight: 700; color: ${secondaryColor}; letter-spacing: -0.5px; margin-bottom: 3px; }
+      .title { font-size: 13px; color: ${accentColor}; font-weight: 500; margin-bottom: 12px; }
+      .contact-line { font-size: 9px; color: #666; }
+      .contact-line span { margin-right: 15px; }
+      .divider { width: 40px; height: 3px; background: ${primaryColor}; margin: 22px 0; }
+      .section { margin-bottom: 22px; }
+      .section-title { font-size: 9px; font-weight: 700; color: ${primaryColor}; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+      .summary { font-size: 11px; color: #444; line-height: 1.7; font-weight: 300; }
+      .exp-item { margin-bottom: 16px; padding-left: 12px; border-left: 3px solid ${primaryColor}; }
+      .exp-title { font-size: 12px; font-weight: 600; color: ${secondaryColor}; margin-bottom: 2px; }
+      .exp-meta { font-size: 9px; color: ${accentColor}; margin-bottom: 6px; }
+      .exp-list { list-style: none; font-size: 9px; color: #555; padding: 0; margin: 0; }
+      .exp-list li { margin-bottom: 3px; padding-left: 10px; position: relative; }
+      .exp-list li:before { content: '—'; position: absolute; left: 0; color: ${accentColor}; }
+      .skills-inline { font-size: 9px; color: #444; line-height: 1.8; }
+      .skill-pill { display: inline-block; background: #f5f5f5; padding: 3px 10px; border-radius: 12px; margin: 2px 4px 2px 0; }
+      .projects-table { width: 100%; }
+      .projects-table td { vertical-align: top; padding: 0 15px 8px 0; }
+      .project-name { font-weight: 600; font-size: 10px; color: ${secondaryColor}; }
+      .project-tech { font-size: 8px; color: #666; }
+      .edu-row { margin-bottom: 8px; }
+      .edu-degree { font-weight: 600; font-size: 10px; color: ${secondaryColor}; display: inline; }
+      .edu-details { font-size: 9px; color: #666; display: inline; margin-left: 8px; }
     </style>
   </head><body>
     <div class="page">
@@ -511,34 +564,36 @@ function generateMinimalLayout(data: typeof portfolioData, primary: string, seco
       
       <div class="section">
         <div class="section-title">Experience</div>
-        ${data.experience.map(exp => `
+        ${data.experience.slice(0, 4).map(exp => `
           <div class="exp-item">
-            <div class="exp-header">
-              <div class="exp-title">${exp.title}</div>
-            </div>
+            <div class="exp-title">${exp.title}</div>
             <div class="exp-meta">${exp.company} · ${exp.location} · ${exp.period}</div>
-            <ul class="exp-list">${exp.description.slice(0, 3).map(d => `<li>${d}</li>`).join('')}</ul>
+            <ul class="exp-list">${exp.description.slice(0, 2).map(d => `<li>${d}</li>`).join('')}</ul>
           </div>
         `).join('')}
       </div>
       
       <div class="section">
         <div class="section-title">Skills</div>
-        <div class="skills-row">
-          ${data.skills.flatMap(s => s.items.slice(0, 4)).map(skill => `<span class="skill-pill">${skill}</span>`).join('')}
+        <div class="skills-inline">
+          ${data.skills.flatMap(s => s.items.slice(0, 5)).map(skill => `<span class="skill-pill">${skill}</span>`).join('')}
         </div>
       </div>
       
       <div class="section">
         <div class="section-title">Projects</div>
-        <div class="projects-list">
-          ${data.projects.slice(0, 4).map(proj => `
-            <div class="project-row">
-              <span class="project-name">${proj.name}</span>
-              <span class="project-desc">${proj.technologies}</span>
-            </div>
+        <table class="projects-table">
+          ${[0, 2, 4].map(i => `
+            <tr>
+              ${data.projects.slice(i, i + 2).map(proj => `
+                <td>
+                  <div class="project-name">${proj.name}</div>
+                  <div class="project-tech">${proj.technologies}</div>
+                </td>
+              `).join('')}
+            </tr>
           `).join('')}
-        </div>
+        </table>
       </div>
       
       <div class="section">
@@ -553,47 +608,47 @@ function generateMinimalLayout(data: typeof portfolioData, primary: string, seco
 }
 
 // Executive Premium Layout - Premium with gold accents
-function generateExecutiveLayout(data: typeof portfolioData, primary: string, secondary: string, accent: string, font: string, common: string): string {
+function generateExecutiveLayout(data: typeof portfolioData, theme: ThemeConfig): string {
+  const { primaryColor, secondaryColor, accentColor } = theme;
+  
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-      ${common}
-      body { font-family: 'Lato', sans-serif; background: #fefefe; }
+      ${getPrintStyles()}
+      body { font-family: Georgia, serif; }
       .page { padding: 0; }
-      .header { background: linear-gradient(135deg, ${secondary} 0%, #2a1a05 100%); color: #fff; padding: 40px 50px; text-align: center; position: relative; }
-      .header:after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; border-top: 15px solid ${secondary}; }
-      .name { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; letter-spacing: 4px; margin-bottom: 8px; }
-      .title { font-size: 13px; color: ${accent}; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; }
-      .contact-row { display: flex; justify-content: center; gap: 25px; font-size: 10px; color: rgba(255,255,255,0.8); flex-wrap: wrap; }
-      .main-content { padding: 50px; }
-      .section { margin-bottom: 30px; }
-      .section-header { display: flex; align-items: center; margin-bottom: 18px; }
-      .section-icon { width: 35px; height: 35px; background: ${accent}; color: ${secondary}; display: flex; align-items: center; justify-content: center; font-size: 14px; margin-right: 12px; }
-      .section-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: ${secondary}; letter-spacing: 1px; }
-      .gold-line { flex: 1; height: 1px; background: linear-gradient(90deg, ${accent}, transparent); margin-left: 15px; }
-      .summary { font-size: 12px; color: #444; line-height: 1.9; font-weight: 300; padding: 20px; background: #faf8f5; border-left: 3px solid ${accent}; }
-      .exp-item { margin-bottom: 22px; padding: 18px; background: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-      .exp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-      .exp-title { font-weight: 700; font-size: 13px; color: ${secondary}; }
-      .exp-period { background: ${accent}; color: ${secondary}; padding: 3px 10px; font-size: 9px; font-weight: 700; }
-      .exp-company { color: ${primary}; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
-      .exp-list { list-style: none; font-size: 10px; color: #555; }
-      .exp-list li { margin-bottom: 5px; padding-left: 15px; position: relative; }
-      .exp-list li:before { content: '◆'; position: absolute; left: 0; color: ${accent}; font-size: 6px; top: 2px; }
-      .skills-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-      .skill-box { background: #faf8f5; padding: 15px; border-bottom: 2px solid ${accent}; }
-      .skill-title { font-weight: 700; font-size: 11px; color: ${secondary}; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-      .skill-items { font-size: 10px; color: #555; line-height: 1.8; }
-      .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-      .project-card { padding: 15px; border: 1px solid #ddd; position: relative; overflow: hidden; }
-      .project-card:before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: ${accent}; }
-      .project-name { font-weight: 700; font-size: 11px; color: ${secondary}; margin-bottom: 5px; }
-      .project-badge { display: inline-block; background: ${secondary}; color: ${accent}; padding: 2px 8px; font-size: 8px; font-weight: 700; margin-bottom: 8px; }
-      .project-desc { font-size: 9px; color: #666; line-height: 1.6; }
-      .edu-box { background: linear-gradient(135deg, ${secondary} 0%, #2a1a05 100%); color: #fff; padding: 20px; text-align: center; }
-      .edu-degree { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-      .edu-school { font-size: 11px; color: ${accent}; }
-      .edu-period { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 5px; }
+      .header { background: ${secondaryColor}; color: #fff; padding: 30px 40px; text-align: center; }
+      .name { font-size: 26px; font-weight: 700; letter-spacing: 3px; margin-bottom: 6px; }
+      .title { font-size: 12px; color: ${accentColor}; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+      .contact-row { font-size: 9px; color: rgba(255,255,255,0.85); }
+      .contact-row span { margin: 0 12px; }
+      .main-content { padding: 30px 40px; }
+      .section { margin-bottom: 22px; }
+      .section-header { border-bottom: 2px solid ${accentColor}; padding-bottom: 6px; margin-bottom: 12px; }
+      .section-icon { display: inline-block; width: 22px; height: 22px; background: ${accentColor}; color: ${secondaryColor}; text-align: center; line-height: 22px; font-size: 11px; margin-right: 8px; vertical-align: middle; }
+      .section-title { font-size: 13px; font-weight: 600; color: ${secondaryColor}; letter-spacing: 1px; display: inline; vertical-align: middle; }
+      .summary { font-size: 10px; color: #444; line-height: 1.8; padding: 15px; background: #faf8f5; border-left: 3px solid ${accentColor}; }
+      .exp-item { margin-bottom: 16px; padding: 12px; background: #fff; border: 1px solid #eee; }
+      .exp-row { margin-bottom: 4px; }
+      .exp-title { font-weight: 700; font-size: 11px; color: ${secondaryColor}; display: inline; }
+      .exp-period { background: ${accentColor}; color: ${secondaryColor}; padding: 2px 8px; font-size: 8px; font-weight: 700; float: right; }
+      .exp-company { color: ${primaryColor}; font-size: 10px; font-weight: 600; margin-bottom: 6px; }
+      .exp-list { list-style: none; font-size: 9px; color: #555; padding: 0; margin: 0; }
+      .exp-list li { margin-bottom: 3px; padding-left: 12px; position: relative; }
+      .exp-list li:before { content: '◆'; position: absolute; left: 0; color: ${accentColor}; font-size: 6px; top: 2px; }
+      .skills-table { width: 100%; }
+      .skills-table td { vertical-align: top; width: 50%; padding: 10px; background: #faf8f5; border-bottom: 2px solid ${accentColor}; }
+      .skill-title { font-weight: 700; font-size: 9px; color: ${secondaryColor}; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+      .skill-items { font-size: 9px; color: #555; line-height: 1.6; }
+      .projects-table { width: 100%; }
+      .projects-table td { vertical-align: top; width: 50%; padding: 10px; border: 1px solid #ddd; position: relative; }
+      .project-accent { position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: ${accentColor}; }
+      .project-name { font-weight: 700; font-size: 10px; color: ${secondaryColor}; margin-bottom: 3px; }
+      .project-badge { display: inline-block; background: ${secondaryColor}; color: ${accentColor}; padding: 1px 6px; font-size: 7px; font-weight: 700; margin-bottom: 5px; }
+      .project-desc { font-size: 8px; color: #666; line-height: 1.5; }
+      .edu-box { background: ${secondaryColor}; color: #fff; padding: 15px; text-align: center; }
+      .edu-degree { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+      .edu-school { font-size: 10px; color: ${accentColor}; }
+      .edu-period { font-size: 9px; color: rgba(255,255,255,0.7); margin-top: 3px; }
     </style>
   </head><body>
     <div class="page">
@@ -610,18 +665,16 @@ function generateExecutiveLayout(data: typeof portfolioData, primary: string, se
       <div class="main-content">
         <div class="section">
           <div class="section-header">
-            <div class="section-icon">★</div>
-            <div class="section-title">Executive Summary</div>
-            <div class="gold-line"></div>
+            <span class="section-icon">★</span>
+            <span class="section-title">Executive Summary</span>
           </div>
           <p class="summary">${data.summary}</p>
         </div>
         
         <div class="section">
           <div class="section-header">
-            <div class="section-icon">◈</div>
-            <div class="section-title">Professional Experience</div>
-            <div class="gold-line"></div>
+            <span class="section-icon">◈</span>
+            <span class="section-title">Professional Experience</span>
           </div>
           ${data.experience.slice(0, 3).map(exp => `
             <div class="exp-item">
@@ -630,42 +683,63 @@ function generateExecutiveLayout(data: typeof portfolioData, primary: string, se
                 <span class="exp-period">${exp.period}</span>
               </div>
               <div class="exp-company">${exp.company} | ${exp.location}</div>
-              <ul class="exp-list">${exp.description.slice(0, 3).map(d => `<li>${d}</li>`).join('')}</ul>
+              <ul class="exp-list">${exp.description.slice(0, 2).map(d => `<li>${d}</li>`).join('')}</ul>
             </div>
           `).join('')}
         </div>
         
         <div class="section">
           <div class="section-header">
-            <div class="section-icon">⚡</div>
-            <div class="section-title">Core Competencies</div>
-            <div class="gold-line"></div>
+            <span class="section-icon">⚡</span>
+            <span class="section-title">Core Competencies</span>
           </div>
-          <div class="skills-container">
-            ${data.skills.slice(0, 4).map(skill => `
-              <div class="skill-box">
-                <div class="skill-title">${skill.category}</div>
-                <div class="skill-items">${skill.items.join(' • ')}</div>
-              </div>
-            `).join('')}
-          </div>
+          <table class="skills-table">
+            <tr>
+              ${data.skills.slice(0, 2).map(skill => `
+                <td>
+                  <div class="skill-title">${skill.category}</div>
+                  <div class="skill-items">${skill.items.join(' • ')}</div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              ${data.skills.slice(2, 4).map(skill => `
+                <td>
+                  <div class="skill-title">${skill.category}</div>
+                  <div class="skill-items">${skill.items.join(' • ')}</div>
+                </td>
+              `).join('')}
+            </tr>
+          </table>
         </div>
         
         <div class="section">
           <div class="section-header">
-            <div class="section-icon">◉</div>
-            <div class="section-title">Key Projects</div>
-            <div class="gold-line"></div>
+            <span class="section-icon">◉</span>
+            <span class="section-title">Key Projects</span>
           </div>
-          <div class="projects-grid">
-            ${data.projects.slice(0, 4).map(proj => `
-              <div class="project-card">
-                <div class="project-name">${proj.name}</div>
-                <div class="project-badge">${proj.contribution}</div>
-                <div class="project-desc">${proj.description}</div>
-              </div>
-            `).join('')}
-          </div>
+          <table class="projects-table">
+            <tr>
+              ${data.projects.slice(0, 2).map(proj => `
+                <td>
+                  <div class="project-accent"></div>
+                  <div class="project-name">${proj.name}</div>
+                  <div class="project-badge">${proj.contribution}</div>
+                  <div class="project-desc">${proj.description}</div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              ${data.projects.slice(2, 4).map(proj => `
+                <td>
+                  <div class="project-accent"></div>
+                  <div class="project-name">${proj.name}</div>
+                  <div class="project-badge">${proj.contribution}</div>
+                  <div class="project-desc">${proj.description}</div>
+                </td>
+              `).join('')}
+            </tr>
+          </table>
         </div>
         
         <div class="edu-box">
@@ -679,81 +753,81 @@ function generateExecutiveLayout(data: typeof portfolioData, primary: string, se
 }
 
 // Creative Timeline Layout - Visual timeline design
-function generateCreativeLayout(data: typeof portfolioData, primary: string, secondary: string, accent: string, font: string, common: string): string {
+function generateCreativeLayout(data: typeof portfolioData, theme: ThemeConfig): string {
+  const { primaryColor, secondaryColor, accentColor } = theme;
+  
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      ${common}
-      body { font-family: 'Poppins', sans-serif; background: #fafafa; }
-      .page { padding: 40px; }
-      .header { display: flex; gap: 25px; margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, ${secondary} 0%, ${primary} 100%); border-radius: 15px; color: #fff; }
-      .avatar { width: 90px; height: 90px; background: ${accent}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex-shrink: 0; color: ${secondary}; }
-      .header-info { flex: 1; }
-      .name { font-size: 24px; font-weight: 700; margin-bottom: 3px; }
-      .title { font-size: 12px; color: ${accent}; font-weight: 500; margin-bottom: 10px; }
-      .contact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; font-size: 9px; color: rgba(255,255,255,0.85); }
-      .two-column { display: grid; grid-template-columns: 250px 1fr; gap: 30px; }
-      .left-col, .right-col { }
-      .section { margin-bottom: 25px; }
-      .section-title { display: inline-flex; align-items: center; gap: 8px; background: ${primary}; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 15px; }
-      .section-title span { font-size: 14px; }
-      .summary { font-size: 11px; color: #555; line-height: 1.8; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-      .timeline { position: relative; padding-left: 20px; }
-      .timeline:before { content: ''; position: absolute; left: 5px; top: 5px; bottom: 5px; width: 2px; background: linear-gradient(180deg, ${primary}, ${accent}); border-radius: 2px; }
-      .timeline-item { position: relative; margin-bottom: 20px; padding: 12px 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-      .timeline-item:before { content: ''; position: absolute; left: -19px; top: 15px; width: 10px; height: 10px; background: ${primary}; border-radius: 50%; border: 2px solid #fff; }
-      .timeline-title { font-weight: 600; font-size: 12px; color: ${secondary}; margin-bottom: 3px; }
-      .timeline-meta { font-size: 9px; color: ${primary}; margin-bottom: 8px; }
-      .timeline-desc { font-size: 9px; color: #666; line-height: 1.6; }
-      .skills-bubbles { display: flex; flex-wrap: wrap; gap: 8px; }
-      .skill-bubble { background: linear-gradient(135deg, ${primary}22, ${accent}22); border: 1px solid ${primary}44; padding: 6px 12px; border-radius: 20px; font-size: 9px; color: ${secondary}; font-weight: 500; }
-      .project-cards { display: flex; flex-direction: column; gap: 10px; }
-      .project-card { padding: 12px; background: #fff; border-radius: 8px; border-left: 3px solid ${primary}; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-      .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-      .project-name { font-weight: 600; font-size: 11px; color: ${secondary}; }
-      .project-tag { background: ${accent}; color: ${secondary}; padding: 2px 8px; border-radius: 10px; font-size: 8px; font-weight: 600; }
-      .project-tech { font-size: 9px; color: #666; }
-      .lang-list { display: flex; flex-wrap: wrap; gap: 10px; }
-      .lang-item { background: #fff; padding: 8px 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px; }
-      .lang-flag { font-size: 16px; }
-      .lang-info { }
-      .lang-name { font-weight: 600; font-size: 10px; color: ${secondary}; }
-      .lang-level { font-size: 8px; color: #666; }
-      .edu-card { background: linear-gradient(135deg, ${primary}15, ${accent}15); padding: 15px; border-radius: 10px; text-align: center; }
-      .edu-icon { font-size: 24px; margin-bottom: 8px; }
-      .edu-degree { font-weight: 600; font-size: 11px; color: ${secondary}; margin-bottom: 3px; }
-      .edu-school { font-size: 10px; color: #666; }
-      .edu-year { font-size: 9px; color: ${primary}; font-weight: 600; margin-top: 5px; }
+      ${getPrintStyles()}
+      body { font-family: 'Segoe UI', sans-serif; background: #fafafa; }
+      .page { padding: 30px; }
+      .header { background: linear-gradient(135deg, ${secondaryColor} 0%, ${primaryColor} 100%); border-radius: 10px; color: #fff; padding: 20px 25px; margin-bottom: 20px; }
+      .header-table { width: 100%; }
+      .header-table td { vertical-align: middle; }
+      .avatar { width: 70px; height: 70px; background: ${accentColor}; border-radius: 50%; text-align: center; line-height: 70px; font-size: 24px; font-weight: 700; color: ${secondaryColor}; }
+      .header-info { padding-left: 18px; }
+      .name { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+      .title { font-size: 11px; color: ${accentColor}; font-weight: 500; margin-bottom: 8px; }
+      .contact-grid { font-size: 8px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+      .two-col-table { width: 100%; }
+      .two-col-table td { vertical-align: top; }
+      .left-col { width: 38%; padding-right: 20px; }
+      .right-col { width: 62%; }
+      .section { margin-bottom: 18px; }
+      .section-title { display: inline-block; background: ${primaryColor}; color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-bottom: 10px; }
+      .section-title span { margin-right: 5px; }
+      .summary { font-size: 10px; color: #555; line-height: 1.7; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #eee; }
+      .timeline { padding-left: 15px; border-left: 2px solid ${primaryColor}; }
+      .timeline-item { margin-bottom: 14px; padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid #eee; position: relative; }
+      .timeline-item:before { content: ''; position: absolute; left: -20px; top: 14px; width: 8px; height: 8px; background: ${primaryColor}; border-radius: 50%; border: 2px solid #fff; }
+      .timeline-title { font-weight: 600; font-size: 11px; color: ${secondaryColor}; margin-bottom: 2px; }
+      .timeline-meta { font-size: 8px; color: ${primaryColor}; margin-bottom: 5px; }
+      .timeline-desc { font-size: 8px; color: #666; line-height: 1.5; }
+      .skill-bubble { display: inline-block; background: linear-gradient(135deg, ${primaryColor}22, ${accentColor}22); border: 1px solid ${primaryColor}44; padding: 4px 10px; border-radius: 12px; font-size: 8px; color: ${secondaryColor}; font-weight: 500; margin: 2px 3px 2px 0; }
+      .project-card { padding: 10px; background: #fff; border-radius: 6px; border-left: 3px solid ${primaryColor}; border: 1px solid #eee; margin-bottom: 8px; }
+      .project-header { margin-bottom: 3px; }
+      .project-name { font-weight: 600; font-size: 10px; color: ${secondaryColor}; display: inline; }
+      .project-tag { display: inline-block; background: ${accentColor}; color: ${secondaryColor}; padding: 1px 6px; border-radius: 8px; font-size: 7px; font-weight: 600; margin-left: 6px; }
+      .project-tech { font-size: 8px; color: #666; }
+      .lang-item { display: inline-block; background: #fff; padding: 5px 10px; border-radius: 6px; border: 1px solid #eee; margin: 2px 4px 2px 0; }
+      .lang-name { font-weight: 600; font-size: 9px; color: ${secondaryColor}; }
+      .lang-level { font-size: 7px; color: #666; }
+      .edu-card { background: linear-gradient(135deg, ${primaryColor}15, ${accentColor}15); padding: 12px; border-radius: 8px; text-align: center; }
+      .edu-icon { font-size: 20px; margin-bottom: 5px; }
+      .edu-degree { font-weight: 600; font-size: 10px; color: ${secondaryColor}; margin-bottom: 2px; }
+      .edu-school { font-size: 9px; color: #666; }
+      .edu-year { font-size: 8px; color: ${primaryColor}; font-weight: 600; margin-top: 3px; }
     </style>
   </head><body>
     <div class="page">
       <div class="header">
-        <div class="avatar">${data.name.split(' ').map(n => n[0]).join('')}</div>
-        <div class="header-info">
-          <div class="name">${data.name}</div>
-          <div class="title">${data.title}</div>
-          <div class="contact-grid">
-            <span>✉ ${data.email}</span>
-            <span>☎ ${data.phone}</span>
-            <span>📍 ${data.location}</span>
-            <span>🔗 ${data.linkedin}</span>
-          </div>
-        </div>
+        <table class="header-table">
+          <tr>
+            <td style="width: 80px;"><div class="avatar">${data.name.split(' ').map(n => n[0]).join('')}</div></td>
+            <td class="header-info">
+              <div class="name">${data.name}</div>
+              <div class="title">${data.title}</div>
+              <div class="contact-grid">
+                ✉ ${data.email} &nbsp;|&nbsp; ☎ ${data.phone} &nbsp;|&nbsp; 📍 ${data.location} &nbsp;|&nbsp; 🔗 ${data.linkedin}
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       
-      <div class="two-column">
-        <div class="left-col">
-          <div class="section">
-            <div class="section-title"><span>🎯</span> Skills</div>
-            <div class="skills-bubbles">
-              ${data.skills.flatMap(s => s.items.slice(0, 3)).map(skill => `<span class="skill-bubble">${skill}</span>`).join('')}
+      <table class="two-col-table">
+        <tr>
+          <td class="left-col">
+            <div class="section">
+              <div class="section-title"><span>🎯</span> Skills</div>
+              <div>
+                ${data.skills.flatMap(s => s.items.slice(0, 4)).map(skill => `<span class="skill-bubble">${skill}</span>`).join('')}
+              </div>
             </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title"><span>🚀</span> Projects</div>
-            <div class="project-cards">
-              ${data.projects.slice(0, 4).map(proj => `
+            
+            <div class="section">
+              <div class="section-title"><span>🚀</span> Projects</div>
+              ${data.projects.slice(0, 5).map(proj => `
                 <div class="project-card">
                   <div class="project-header">
                     <span class="project-name">${proj.name}</span>
@@ -763,53 +837,51 @@ function generateCreativeLayout(data: typeof portfolioData, primary: string, sec
                 </div>
               `).join('')}
             </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title"><span>🌍</span> Languages</div>
-            <div class="lang-list">
-              ${data.languages.map(lang => `
-                <div class="lang-item">
-                  <div class="lang-info">
+            
+            <div class="section">
+              <div class="section-title"><span>🌍</span> Languages</div>
+              <div>
+                ${data.languages.map(lang => `
+                  <div class="lang-item">
                     <div class="lang-name">${lang.name}</div>
                     <div class="lang-level">${lang.level}</div>
                   </div>
-                </div>
-              `).join('')}
+                `).join('')}
+              </div>
             </div>
-          </div>
+            
+            <div class="section">
+              <div class="section-title"><span>🎓</span> Education</div>
+              <div class="edu-card">
+                <div class="edu-icon">📚</div>
+                <div class="edu-degree">${data.education[0].degree}</div>
+                <div class="edu-school">${data.education[0].institution}</div>
+                <div class="edu-year">${data.education[0].period}</div>
+              </div>
+            </div>
+          </td>
           
-          <div class="section">
-            <div class="section-title"><span>🎓</span> Education</div>
-            <div class="edu-card">
-              <div class="edu-icon">📚</div>
-              <div class="edu-degree">${data.education[0].degree}</div>
-              <div class="edu-school">${data.education[0].institution}</div>
-              <div class="edu-year">${data.education[0].period}</div>
+          <td class="right-col">
+            <div class="section">
+              <div class="section-title"><span>💼</span> About Me</div>
+              <div class="summary">${data.summary}</div>
             </div>
-          </div>
-        </div>
-        
-        <div class="right-col">
-          <div class="section">
-            <div class="section-title"><span>💼</span> About Me</div>
-            <div class="summary">${data.summary}</div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title"><span>📈</span> Experience Timeline</div>
-            <div class="timeline">
-              ${data.experience.map(exp => `
-                <div class="timeline-item">
-                  <div class="timeline-title">${exp.title}</div>
-                  <div class="timeline-meta">${exp.company} • ${exp.period}</div>
-                  <div class="timeline-desc">${exp.description.slice(0, 2).join('. ')}.</div>
-                </div>
-              `).join('')}
+            
+            <div class="section">
+              <div class="section-title"><span>📈</span> Experience Timeline</div>
+              <div class="timeline">
+                ${data.experience.slice(0, 4).map(exp => `
+                  <div class="timeline-item">
+                    <div class="timeline-title">${exp.title}</div>
+                    <div class="timeline-meta">${exp.company} • ${exp.period}</div>
+                    <div class="timeline-desc">${exp.description.slice(0, 2).join('. ')}.</div>
+                  </div>
+                `).join('')}
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </td>
+        </tr>
+      </table>
     </div>
   </body></html>`;
 }
@@ -827,7 +899,12 @@ export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'mod
       margin: 0,
       filename: `${portfolioData.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        letterRendering: true
+      },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     
