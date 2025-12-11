@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, FileText, Check, Loader2, Eye, X, ZoomIn, ZoomOut } from "lucide-react";
+import { Download, FileText, Check, Loader2, Eye, ZoomIn, ZoomOut, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,26 +9,49 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { generateCV, cvThemes, CVTheme, ThemeConfig, generateCVHTML, portfolioData } from "@/lib/cvGenerator";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+type Step = 'theme' | 'customize' | 'preview';
 
 const CVDownloadDialog = () => {
   const [selectedTheme, setSelectedTheme] = useState<CVTheme>('modern');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatingFormat, setGeneratingFormat] = useState<'pdf' | 'docx' | null>(null);
   const [open, setOpen] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [currentStep, setCurrentStep] = useState<Step>('theme');
   const [previewScale, setPreviewScale] = useState(0.6);
+
+  // Customization state
+  const [customName, setCustomName] = useState(portfolioData.name);
+  const [customTitle, setCustomTitle] = useState(portfolioData.title);
+  const [customSummary, setCustomSummary] = useState(portfolioData.summary);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>(
+    portfolioData.projects.map(p => p.name)
+  );
 
   const currentTheme = useMemo(() => 
     cvThemes.find(t => t.id === selectedTheme) || cvThemes[0],
     [selectedTheme]
   );
 
+  // Generate custom portfolio data
+  const customPortfolioData = useMemo(() => ({
+    ...portfolioData,
+    name: customName.trim() || portfolioData.name,
+    title: customTitle.trim() || portfolioData.title,
+    summary: customSummary.trim() || portfolioData.summary,
+    projects: portfolioData.projects.filter(p => selectedProjects.includes(p.name))
+  }), [customName, customTitle, customSummary, selectedProjects]);
+
   const previewHTML = useMemo(() => 
-    generateCVHTML(currentTheme),
-    [currentTheme]
+    generateCVHTML(currentTheme, customPortfolioData),
+    [currentTheme, customPortfolioData]
   );
 
   const handleDownload = async (format: 'pdf' | 'docx') => {
@@ -36,7 +59,7 @@ const CVDownloadDialog = () => {
     setGeneratingFormat(format);
     
     try {
-      await generateCV(format, selectedTheme);
+      await generateCV(format, selectedTheme, customPortfolioData);
       toast.success(`CV downloaded as ${format.toUpperCase()} successfully!`);
     } catch (error) {
       toast.error("Failed to generate CV. Please try again.");
@@ -49,6 +72,28 @@ const CVDownloadDialog = () => {
 
   const handleZoomIn = () => setPreviewScale(prev => Math.min(prev + 0.1, 1));
   const handleZoomOut = () => setPreviewScale(prev => Math.max(prev - 0.1, 0.3));
+
+  const toggleProject = (projectName: string) => {
+    setSelectedProjects(prev => 
+      prev.includes(projectName)
+        ? prev.filter(p => p !== projectName)
+        : [...prev, projectName]
+    );
+  };
+
+  const resetCustomization = () => {
+    setCustomName(portfolioData.name);
+    setCustomTitle(portfolioData.title);
+    setCustomSummary(portfolioData.summary);
+    setSelectedProjects(portfolioData.projects.map(p => p.name));
+  };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setCurrentStep('theme');
+    }
+  };
 
   const ThemeCard = ({ theme }: { theme: ThemeConfig }) => {
     const isSelected = selectedTheme === theme.id;
@@ -64,13 +109,10 @@ const CVDownloadDialog = () => {
             : 'border-border hover:border-muted-foreground/50'
         }`}
       >
-        {/* Theme Preview */}
         <div 
           className="h-24 w-full"
           style={{ background: theme.previewBg }}
         />
-        
-        {/* Theme Info */}
         <div className="p-3 bg-card">
           <div className="flex items-center justify-between mb-1">
             <h4 className="font-semibold text-sm text-foreground">{theme.name}</h4>
@@ -93,9 +135,36 @@ const CVDownloadDialog = () => {
     );
   };
 
+  const StepIndicator = () => (
+    <div className="flex items-center justify-center gap-2 mb-4">
+      {(['theme', 'customize', 'preview'] as Step[]).map((step, index) => (
+        <div key={step} className="flex items-center">
+          <div 
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+              currentStep === step 
+                ? 'bg-primary text-primary-foreground' 
+                : index < ['theme', 'customize', 'preview'].indexOf(currentStep)
+                ? 'bg-primary/20 text-primary'
+                : 'bg-muted text-muted-foreground'
+            }`}
+          >
+            {index + 1}
+          </div>
+          {index < 2 && (
+            <div className={`w-8 h-0.5 mx-1 ${
+              index < ['theme', 'customize', 'preview'].indexOf(currentStep)
+                ? 'bg-primary'
+                : 'bg-muted'
+            }`} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Button 
             className="gap-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
@@ -104,164 +173,274 @@ const CVDownloadDialog = () => {
             Download CV
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl bg-background border-border">
+        <DialogContent className="sm:max-w-2xl bg-background border-border max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
               <FileText className="text-primary" size={24} />
-              Choose CV Theme
+              {currentStep === 'theme' && 'Choose CV Theme'}
+              {currentStep === 'customize' && 'Customize Your CV'}
+              {currentStep === 'preview' && 'Preview & Download'}
             </DialogTitle>
           </DialogHeader>
+
+          <StepIndicator />
           
-          {/* Theme Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-4">
-            {cvThemes.map((theme) => (
-              <ThemeCard key={theme.id} theme={theme} />
-            ))}
-          </div>
-
-          {/* Preview Button */}
-          <Button
-            onClick={() => setShowPreview(true)}
-            variant="outline"
-            className="w-full gap-2 border-primary/30 hover:bg-primary/10"
-          >
-            <Eye size={18} />
-            Preview CV with {currentTheme.name} Theme
-          </Button>
-
-          {/* Download Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
-            <Button
-              onClick={() => handleDownload('pdf')}
-              disabled={isGenerating}
-              className="flex-1 gap-2 bg-red-500 hover:bg-red-600 text-white"
-            >
-              {generatingFormat === 'pdf' ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Generating PDF...
-                </>
-              ) : (
-                <>
-                  <FileText size={18} />
-                  Download as PDF
-                </>
+          <ScrollArea className="flex-1 pr-4">
+            <AnimatePresence mode="wait">
+              {/* Step 1: Theme Selection */}
+              {currentStep === 'theme' && (
+                <motion.div
+                  key="theme"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-4">
+                    {cvThemes.map((theme) => (
+                      <ThemeCard key={theme.id} theme={theme} />
+                    ))}
+                  </div>
+                </motion.div>
               )}
-            </Button>
-            <Button
-              onClick={() => handleDownload('docx')}
-              disabled={isGenerating}
-              className="flex-1 gap-2 bg-blue-500 hover:bg-blue-600 text-white"
-            >
-              {generatingFormat === 'docx' ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Generating DOCX...
-                </>
-              ) : (
-                <>
-                  <FileText size={18} />
-                  Download as DOCX
-                </>
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
-      {/* CV Preview Modal */}
-      <Dialog open={showPreview} onOpenChange={setShowPreview}>
-        <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 overflow-hidden">
-          <div className="flex flex-col h-full">
-            {/* Preview Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-card">
-              <div className="flex items-center gap-3">
-                <FileText className="text-primary" size={24} />
-                <div>
-                  <h3 className="font-bold text-foreground">CV Preview</h3>
-                  <p className="text-xs text-muted-foreground">Theme: {currentTheme.name}</p>
-                </div>
-              </div>
+              {/* Step 2: Customization */}
+              {currentStep === 'customize' && (
+                <motion.div
+                  key="customize"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-4 my-4"
+                >
+                  <div className="space-y-2">
+                    <Label htmlFor="cv-name" className="text-sm font-medium">Full Name</Label>
+                    <Input
+                      id="cv-name"
+                      value={customName}
+                      onChange={(e) => setCustomName(e.target.value)}
+                      placeholder="Your full name"
+                      maxLength={100}
+                      className="bg-card"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cv-title" className="text-sm font-medium">Job Title</Label>
+                    <Input
+                      id="cv-title"
+                      value={customTitle}
+                      onChange={(e) => setCustomTitle(e.target.value)}
+                      placeholder="Your job title"
+                      maxLength={100}
+                      className="bg-card"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cv-summary" className="text-sm font-medium">Professional Summary</Label>
+                    <Textarea
+                      id="cv-summary"
+                      value={customSummary}
+                      onChange={(e) => setCustomSummary(e.target.value)}
+                      placeholder="Brief professional summary..."
+                      maxLength={500}
+                      rows={4}
+                      className="bg-card resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground text-right">
+                      {customSummary.length}/500
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Select Projects to Include</Label>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedProjects.length} of {portfolioData.projects.length} selected
+                      </span>
+                    </div>
+                    <div className="space-y-2 max-h-48 overflow-y-auto rounded-lg border border-border p-3 bg-card">
+                      {portfolioData.projects.map((project) => (
+                        <div 
+                          key={project.name}
+                          className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                        >
+                          <Checkbox
+                            id={`project-${project.name}`}
+                            checked={selectedProjects.includes(project.name)}
+                            onCheckedChange={() => toggleProject(project.name)}
+                          />
+                          <label 
+                            htmlFor={`project-${project.name}`}
+                            className="flex-1 cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-foreground">{project.name}</span>
+                              <span className={`text-xs px-2 py-0.5 rounded ${
+                                project.contribution === 'Full-Stack' 
+                                  ? 'bg-purple-500/20 text-purple-400' 
+                                  : 'bg-blue-500/20 text-blue-400'
+                              }`}>
+                                {project.contribution}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{project.technologies}</p>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={resetCustomization}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Reset to default
+                  </Button>
+                </motion.div>
+              )}
+
+              {/* Step 3: Preview */}
+              {currentStep === 'preview' && (
+                <motion.div
+                  key="preview"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="my-4"
+                >
+                  {/* Zoom Controls */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleZoomOut}
+                      disabled={previewScale <= 0.3}
+                      className="h-8 w-8"
+                    >
+                      <ZoomOut size={16} />
+                    </Button>
+                    <span className="text-sm text-muted-foreground min-w-[50px] text-center">
+                      {Math.round(previewScale * 100)}%
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleZoomIn}
+                      disabled={previewScale >= 1}
+                      className="h-8 w-8"
+                    >
+                      <ZoomIn size={16} />
+                    </Button>
+                  </div>
+
+                  {/* Preview */}
+                  <div className="bg-muted/30 rounded-lg p-4 overflow-auto max-h-[400px]">
+                    <div className="flex justify-center">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-white rounded-lg shadow-xl overflow-hidden"
+                        style={{ 
+                          transform: `scale(${previewScale})`,
+                          transformOrigin: 'top center',
+                          width: '800px'
+                        }}
+                      >
+                        <iframe
+                          srcDoc={previewHTML}
+                          className="w-full border-0"
+                          style={{ height: '1100px' }}
+                          title="CV Preview"
+                        />
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </ScrollArea>
+
+          {/* Navigation & Download Buttons */}
+          <div className="flex flex-col gap-3 pt-4 border-t border-border mt-4">
+            <div className="flex justify-between gap-3">
+              {currentStep !== 'theme' && (
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(currentStep === 'preview' ? 'customize' : 'theme')}
+                  className="gap-2"
+                >
+                  <ChevronLeft size={16} />
+                  Back
+                </Button>
+              )}
               
-              {/* Zoom Controls */}
-              <div className="flex items-center gap-2">
+              {currentStep === 'theme' && (
                 <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleZoomOut}
-                  disabled={previewScale <= 0.3}
-                  className="h-8 w-8"
+                  onClick={() => setCurrentStep('customize')}
+                  className="gap-2 ml-auto"
                 >
-                  <ZoomOut size={16} />
+                  Customize CV
+                  <Pencil size={16} />
                 </Button>
-                <span className="text-sm text-muted-foreground min-w-[50px] text-center">
-                  {Math.round(previewScale * 100)}%
-                </span>
+              )}
+              
+              {currentStep === 'customize' && (
                 <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleZoomIn}
-                  disabled={previewScale >= 1}
-                  className="h-8 w-8"
+                  onClick={() => setCurrentStep('preview')}
+                  className="gap-2 ml-auto"
+                  disabled={selectedProjects.length === 0}
                 >
-                  <ZoomIn size={16} />
+                  Preview CV
+                  <Eye size={16} />
                 </Button>
-              </div>
+              )}
+            </div>
 
-              {/* Download from Preview */}
-              <div className="flex items-center gap-2">
+            {currentStep === 'preview' && (
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={() => handleDownload('pdf')}
                   disabled={isGenerating}
-                  size="sm"
-                  className="gap-1 bg-red-500 hover:bg-red-600 text-white"
+                  className="flex-1 gap-2 bg-red-500 hover:bg-red-600 text-white"
                 >
                   {generatingFormat === 'pdf' ? (
-                    <Loader2 size={14} className="animate-spin" />
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      Generating PDF...
+                    </>
                   ) : (
-                    <Download size={14} />
+                    <>
+                      <FileText size={18} />
+                      Download as PDF
+                    </>
                   )}
-                  PDF
                 </Button>
                 <Button
                   onClick={() => handleDownload('docx')}
                   disabled={isGenerating}
-                  size="sm"
-                  className="gap-1 bg-blue-500 hover:bg-blue-600 text-white"
+                  className="flex-1 gap-2 bg-blue-500 hover:bg-blue-600 text-white"
                 >
                   {generatingFormat === 'docx' ? (
-                    <Loader2 size={14} className="animate-spin" />
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      Generating DOCX...
+                    </>
                   ) : (
-                    <Download size={14} />
+                    <>
+                      <FileText size={18} />
+                      Download as DOCX
+                    </>
                   )}
-                  DOCX
                 </Button>
               </div>
-            </div>
-
-            {/* Preview Content */}
-            <ScrollArea className="flex-1 bg-muted/30">
-              <div className="p-8 flex justify-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-lg shadow-2xl overflow-hidden"
-                  style={{ 
-                    transform: `scale(${previewScale})`,
-                    transformOrigin: 'top center',
-                    width: '800px'
-                  }}
-                >
-                  <iframe
-                    srcDoc={previewHTML}
-                    className="w-full border-0"
-                    style={{ height: '1100px' }}
-                    title="CV Preview"
-                  />
-                </motion.div>
-              </div>
-            </ScrollArea>
+            )}
           </div>
         </DialogContent>
       </Dialog>
