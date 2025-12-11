@@ -243,10 +243,13 @@ const getPrintStyles = () => `
   .page { width: 210mm; min-height: 297mm; margin: 0 auto; }
 `;
 
+// Custom data type for CV generation
+export type CustomPortfolioData = typeof portfolioData;
+
 // Generate different HTML layouts based on theme
-export const generateCVHTML = (theme: ThemeConfig): string => {
+export const generateCVHTML = (theme: ThemeConfig, customData?: Partial<CustomPortfolioData>): string => {
   const { id } = theme;
-  const data = portfolioData;
+  const data = customData ? { ...portfolioData, ...customData } : portfolioData;
 
   switch (id) {
     case 'modern':
@@ -886,9 +889,10 @@ function generateCreativeLayout(data: typeof portfolioData, theme: ThemeConfig):
   </body></html>`;
 }
 
-export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'modern'): Promise<void> => {
+export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'modern', customData?: Partial<CustomPortfolioData>): Promise<void> => {
   const theme = cvThemes.find(t => t.id === themeId) || cvThemes[0];
-  const html = generateCVHTML(theme);
+  const data = customData ? { ...portfolioData, ...customData } : portfolioData;
+  const html = generateCVHTML(theme, data);
   
   if (format === 'pdf') {
     const element = document.createElement('div');
@@ -897,7 +901,7 @@ export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'mod
     
     const options = {
       margin: 0,
-      filename: `${portfolioData.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.pdf`,
+      filename: `${data.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
         scale: 2, 
@@ -914,7 +918,7 @@ export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'mod
     const blob = new Blob([html], { type: 'application/msword' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${portfolioData.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.doc`;
+    link.download = `${data.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.doc`;
     link.click();
     URL.revokeObjectURL(link.href);
   }
