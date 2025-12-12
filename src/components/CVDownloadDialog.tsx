@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, FileText, Check, Loader2, Eye, ZoomIn, ZoomOut, Pencil, ChevronLeft, ChevronRight, GripVertical } from "lucide-react";
+import { Download, FileText, Check, Loader2, Eye, ZoomIn, ZoomOut, Pencil, ChevronLeft, ChevronRight, GripVertical, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,11 +40,22 @@ type Step = 'theme' | 'customize' | 'preview';
 interface SortableSkillItemProps {
   id: string;
   skill: { category: string; items: string[] };
-  isSelected: boolean;
-  onToggle: () => void;
+  selectedItems: Set<string>;
+  onToggleCategory: () => void;
+  onToggleItem: (item: string) => void;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }
 
-const SortableSkillItem = ({ id, skill, isSelected, onToggle }: SortableSkillItemProps) => {
+const SortableSkillItem = ({ 
+  id, 
+  skill, 
+  selectedItems, 
+  onToggleCategory, 
+  onToggleItem,
+  isExpanded,
+  onToggleExpand
+}: SortableSkillItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   
   const style = {
@@ -54,36 +65,81 @@ const SortableSkillItem = ({ id, skill, isSelected, onToggle }: SortableSkillIte
     opacity: isDragging ? 0.8 : 1,
   };
 
+  const selectedCount = skill.items.filter(item => selectedItems.has(`${skill.category}:${item}`)).length;
+  const allSelected = selectedCount === skill.items.length;
+  const someSelected = selectedCount > 0 && selectedCount < skill.items.length;
+
   return (
     <div 
       ref={setNodeRef}
       style={style}
-      className={`flex items-start gap-2 p-2 rounded-lg transition-colors ${
-        isDragging ? 'bg-muted shadow-lg' : 'hover:bg-muted/50'
-      } ${!isSelected ? 'opacity-50' : ''}`}
+      className={`rounded-lg transition-colors ${
+        isDragging ? 'bg-muted shadow-lg' : ''
+      } ${selectedCount === 0 ? 'opacity-50' : ''}`}
     >
-      <button
-        {...attributes}
-        {...listeners}
-        className="p-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
-        type="button"
-      >
-        <GripVertical size={14} />
-      </button>
-      <Checkbox
-        id={`skill-${skill.category}`}
-        checked={isSelected}
-        onCheckedChange={onToggle}
-      />
-      <label 
-        htmlFor={`skill-${skill.category}`}
-        className="flex-1 cursor-pointer"
-      >
-        <span className="text-sm font-medium text-foreground">{skill.category}</span>
-        <p className="text-xs text-muted-foreground line-clamp-1">
-          {skill.items.slice(0, 4).join(', ')}{skill.items.length > 4 ? '...' : ''}
-        </p>
-      </label>
+      <div className="flex items-center gap-2 p-2 hover:bg-muted/50 rounded-lg">
+        <button
+          {...attributes}
+          {...listeners}
+          className="p-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
+          type="button"
+        >
+          <GripVertical size={14} />
+        </button>
+        <Checkbox
+          id={`skill-${skill.category}`}
+          checked={allSelected}
+          ref={(el) => {
+            if (el && someSelected) {
+              (el as any).indeterminate = true;
+            }
+          }}
+          onCheckedChange={onToggleCategory}
+        />
+        <label 
+          htmlFor={`skill-${skill.category}`}
+          className="flex-1 cursor-pointer"
+        >
+          <span className="text-sm font-medium text-foreground">{skill.category}</span>
+          <span className="text-xs text-muted-foreground ml-2">
+            ({selectedCount}/{skill.items.length})
+          </span>
+        </label>
+        <button
+          type="button"
+          onClick={onToggleExpand}
+          className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
+      </div>
+      
+      {isExpanded && (
+        <div className="ml-10 pl-2 border-l border-border space-y-1 pb-2">
+          {skill.items.map(item => {
+            const itemKey = `${skill.category}:${item}`;
+            return (
+              <div 
+                key={item}
+                className="flex items-center gap-2 py-1 px-2 rounded hover:bg-muted/30"
+              >
+                <Checkbox
+                  id={`skill-item-${itemKey}`}
+                  checked={selectedItems.has(itemKey)}
+                  onCheckedChange={() => onToggleItem(item)}
+                  className="h-3.5 w-3.5"
+                />
+                <label 
+                  htmlFor={`skill-item-${itemKey}`}
+                  className="text-xs text-muted-foreground cursor-pointer hover:text-foreground"
+                >
+                  {item}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -157,13 +213,18 @@ const CVDownloadDialog = () => {
     portfolioData.projects.map(p => p.name)
   );
   
-  // Skills: ordered array of category names, selection tracked separately
+  // Skills: ordered array of category names, individual items tracked by "category:item" keys
   const [orderedSkills, setOrderedSkills] = useState<string[]>(
     portfolioData.skills.map(s => s.category)
   );
-  const [selectedSkillCategories, setSelectedSkillCategories] = useState<Set<string>>(
-    new Set(portfolioData.skills.map(s => s.category))
-  );
+  const [selectedSkillItems, setSelectedSkillItems] = useState<Set<string>>(() => {
+    const items = new Set<string>();
+    portfolioData.skills.forEach(skill => {
+      skill.items.forEach(item => items.add(`${skill.category}:${item}`));
+    });
+    return items;
+  });
+  const [expandedSkillCategories, setExpandedSkillCategories] = useState<Set<string>>(new Set());
   
   // Experience: ordered array of indices, selection tracked separately
   const [orderedExperiences, setOrderedExperiences] = useState<number[]>(
@@ -186,10 +247,16 @@ const CVDownloadDialog = () => {
 
   // Generate custom portfolio data with proper ordering
   const customPortfolioData = useMemo(() => {
+    // Filter skills based on selected individual items
     const orderedFilteredSkills = orderedSkills
-      .filter(category => selectedSkillCategories.has(category))
-      .map(category => portfolioData.skills.find(s => s.category === category)!)
-      .filter(Boolean);
+      .map(category => {
+        const originalSkill = portfolioData.skills.find(s => s.category === category)!;
+        const filteredItems = originalSkill.items.filter(item => 
+          selectedSkillItems.has(`${category}:${item}`)
+        );
+        return filteredItems.length > 0 ? { ...originalSkill, items: filteredItems } : null;
+      })
+      .filter(Boolean) as typeof portfolioData.skills;
     
     const orderedFilteredExperiences = orderedExperiences
       .filter(idx => selectedExperienceIndices.has(idx))
@@ -204,7 +271,7 @@ const CVDownloadDialog = () => {
       skills: orderedFilteredSkills,
       experience: orderedFilteredExperiences
     };
-  }, [customName, customTitle, customSummary, selectedProjects, orderedSkills, selectedSkillCategories, orderedExperiences, selectedExperienceIndices]);
+  }, [customName, customTitle, customSummary, selectedProjects, orderedSkills, selectedSkillItems, orderedExperiences, selectedExperienceIndices]);
 
   const previewHTML = useMemo(() => 
     generateCVHTML(currentTheme, customPortfolioData),
@@ -238,8 +305,39 @@ const CVDownloadDialog = () => {
     );
   };
 
-  const toggleSkill = (category: string) => {
-    setSelectedSkillCategories(prev => {
+  const toggleSkillCategory = (category: string) => {
+    const skill = portfolioData.skills.find(s => s.category === category)!;
+    const categoryItems = skill.items.map(item => `${category}:${item}`);
+    const allSelected = categoryItems.every(key => selectedSkillItems.has(key));
+    
+    setSelectedSkillItems(prev => {
+      const next = new Set(prev);
+      categoryItems.forEach(key => {
+        if (allSelected) {
+          next.delete(key);
+        } else {
+          next.add(key);
+        }
+      });
+      return next;
+    });
+  };
+
+  const toggleSkillItem = (category: string, item: string) => {
+    const key = `${category}:${item}`;
+    setSelectedSkillItems(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  const toggleSkillExpand = (category: string) => {
+    setExpandedSkillCategories(prev => {
       const next = new Set(prev);
       if (next.has(category)) {
         next.delete(category);
@@ -290,7 +388,12 @@ const CVDownloadDialog = () => {
     setCustomSummary(portfolioData.summary);
     setSelectedProjects(portfolioData.projects.map(p => p.name));
     setOrderedSkills(portfolioData.skills.map(s => s.category));
-    setSelectedSkillCategories(new Set(portfolioData.skills.map(s => s.category)));
+    const allSkillItems = new Set<string>();
+    portfolioData.skills.forEach(skill => {
+      skill.items.forEach(item => allSkillItems.add(`${skill.category}:${item}`));
+    });
+    setSelectedSkillItems(allSkillItems);
+    setExpandedSkillCategories(new Set());
     setOrderedExperiences(portfolioData.experience.map((_, i) => i));
     setSelectedExperienceIndices(new Set(portfolioData.experience.map((_, i) => i)));
   };
@@ -464,12 +567,12 @@ const CVDownloadDialog = () => {
                   {/* Skills Selection */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">Skills (drag to reorder)</Label>
+                      <Label className="text-sm font-medium">Skills (drag to reorder, click to expand)</Label>
                       <span className="text-xs text-muted-foreground">
-                        {selectedSkillCategories.size} of {portfolioData.skills.length} selected
+                        {selectedSkillItems.size} items selected
                       </span>
                     </div>
-                    <div className="space-y-1 max-h-48 overflow-y-auto rounded-lg border border-border p-2 bg-card">
+                    <div className="space-y-1 max-h-64 overflow-y-auto rounded-lg border border-border p-2 bg-card">
                       <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
@@ -483,8 +586,11 @@ const CVDownloadDialog = () => {
                                 key={category}
                                 id={category}
                                 skill={skill}
-                                isSelected={selectedSkillCategories.has(category)}
-                                onToggle={() => toggleSkill(category)}
+                                selectedItems={selectedSkillItems}
+                                onToggleCategory={() => toggleSkillCategory(category)}
+                                onToggleItem={(item) => toggleSkillItem(category, item)}
+                                isExpanded={expandedSkillCategories.has(category)}
+                                onToggleExpand={() => toggleSkillExpand(category)}
                               />
                             );
                           })}
@@ -667,7 +773,7 @@ const CVDownloadDialog = () => {
                 <Button
                   onClick={() => setCurrentStep('preview')}
                   className="gap-2 ml-auto"
-                  disabled={selectedProjects.length === 0 || selectedSkillCategories.size === 0 || selectedExperienceIndices.size === 0}
+                  disabled={selectedProjects.length === 0 || selectedSkillItems.size === 0 || selectedExperienceIndices.size === 0}
                 >
                   Preview CV
                   <Eye size={16} />
