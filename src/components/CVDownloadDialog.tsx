@@ -34,6 +34,12 @@ const CVDownloadDialog = () => {
   const [selectedProjects, setSelectedProjects] = useState<string[]>(
     portfolioData.projects.map(p => p.name)
   );
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(
+    portfolioData.skills.map(s => s.category)
+  );
+  const [selectedExperiences, setSelectedExperiences] = useState<number[]>(
+    portfolioData.experience.map((_, i) => i)
+  );
 
   const currentTheme = useMemo(() => 
     cvThemes.find(t => t.id === selectedTheme) || cvThemes[0],
@@ -46,8 +52,10 @@ const CVDownloadDialog = () => {
     name: customName.trim() || portfolioData.name,
     title: customTitle.trim() || portfolioData.title,
     summary: customSummary.trim() || portfolioData.summary,
-    projects: portfolioData.projects.filter(p => selectedProjects.includes(p.name))
-  }), [customName, customTitle, customSummary, selectedProjects]);
+    projects: portfolioData.projects.filter(p => selectedProjects.includes(p.name)),
+    skills: portfolioData.skills.filter(s => selectedSkills.includes(s.category)),
+    experience: portfolioData.experience.filter((_, i) => selectedExperiences.includes(i))
+  }), [customName, customTitle, customSummary, selectedProjects, selectedSkills, selectedExperiences]);
 
   const previewHTML = useMemo(() => 
     generateCVHTML(currentTheme, customPortfolioData),
@@ -81,11 +89,29 @@ const CVDownloadDialog = () => {
     );
   };
 
+  const toggleSkill = (category: string) => {
+    setSelectedSkills(prev => 
+      prev.includes(category)
+        ? prev.filter(s => s !== category)
+        : [...prev, category]
+    );
+  };
+
+  const toggleExperience = (index: number) => {
+    setSelectedExperiences(prev => 
+      prev.includes(index)
+        ? prev.filter(i => i !== index)
+        : [...prev, index].sort((a, b) => a - b)
+    );
+  };
+
   const resetCustomization = () => {
     setCustomName(portfolioData.name);
     setCustomTitle(portfolioData.title);
     setCustomSummary(portfolioData.summary);
     setSelectedProjects(portfolioData.projects.map(p => p.name));
+    setSelectedSkills(portfolioData.skills.map(s => s.category));
+    setSelectedExperiences(portfolioData.experience.map((_, i) => i));
   };
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -254,6 +280,75 @@ const CVDownloadDialog = () => {
                     </p>
                   </div>
 
+                  {/* Skills Selection */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Select Skills to Include</Label>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedSkills.length} of {portfolioData.skills.length} selected
+                      </span>
+                    </div>
+                    <div className="space-y-2 max-h-40 overflow-y-auto rounded-lg border border-border p-3 bg-card">
+                      {portfolioData.skills.map((skill) => (
+                        <div 
+                          key={skill.category}
+                          className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                        >
+                          <Checkbox
+                            id={`skill-${skill.category}`}
+                            checked={selectedSkills.includes(skill.category)}
+                            onCheckedChange={() => toggleSkill(skill.category)}
+                          />
+                          <label 
+                            htmlFor={`skill-${skill.category}`}
+                            className="flex-1 cursor-pointer"
+                          >
+                            <span className="text-sm font-medium text-foreground">{skill.category}</span>
+                            <p className="text-xs text-muted-foreground line-clamp-1">
+                              {skill.items.slice(0, 4).join(', ')}{skill.items.length > 4 ? '...' : ''}
+                            </p>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Experience Selection */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Select Experience to Include</Label>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedExperiences.length} of {portfolioData.experience.length} selected
+                      </span>
+                    </div>
+                    <div className="space-y-2 max-h-40 overflow-y-auto rounded-lg border border-border p-3 bg-card">
+                      {portfolioData.experience.map((exp, index) => (
+                        <div 
+                          key={index}
+                          className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                        >
+                          <Checkbox
+                            id={`exp-${index}`}
+                            checked={selectedExperiences.includes(index)}
+                            onCheckedChange={() => toggleExperience(index)}
+                          />
+                          <label 
+                            htmlFor={`exp-${index}`}
+                            className="flex-1 cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-foreground">{exp.title}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              {exp.company} • {exp.period}
+                            </p>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Projects Selection */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-medium">Select Projects to Include</Label>
@@ -261,7 +356,7 @@ const CVDownloadDialog = () => {
                         {selectedProjects.length} of {portfolioData.projects.length} selected
                       </span>
                     </div>
-                    <div className="space-y-2 max-h-48 overflow-y-auto rounded-lg border border-border p-3 bg-card">
+                    <div className="space-y-2 max-h-40 overflow-y-auto rounded-lg border border-border p-3 bg-card">
                       {portfolioData.projects.map((project) => (
                         <div 
                           key={project.name}
@@ -395,7 +490,7 @@ const CVDownloadDialog = () => {
                 <Button
                   onClick={() => setCurrentStep('preview')}
                   className="gap-2 ml-auto"
-                  disabled={selectedProjects.length === 0}
+                  disabled={selectedProjects.length === 0 || selectedSkills.length === 0 || selectedExperiences.length === 0}
                 >
                   Preview CV
                   <Eye size={16} />
