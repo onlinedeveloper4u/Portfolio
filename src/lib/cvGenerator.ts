@@ -1,4 +1,4 @@
-import html2pdf from 'html2pdf.js';
+// PDF generation using native browser print functionality
 
 // Complete portfolio data from actual portfolio components
 export const portfolioData = {
@@ -895,25 +895,24 @@ export const generateCV = async (format: 'pdf' | 'docx', themeId: CVTheme = 'mod
   const html = generateCVHTML(theme, data);
   
   if (format === 'pdf') {
-    const element = document.createElement('div');
-    element.innerHTML = html;
-    document.body.appendChild(element);
-    
-    const options = {
-      margin: 0,
-      filename: `${data.name.replace(/\s+/g, '_')}_CV_${theme.name.replace(/\s+/g, '_')}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true,
-        logging: false,
-        letterRendering: true
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    await html2pdf().set(options).from(element).save();
-    document.body.removeChild(element);
+    // Use native browser print-to-PDF functionality
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      
+      // Wait for content to load then trigger print dialog
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.print();
+        }, 250);
+      };
+      
+      // Fallback if onload doesn't fire
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    }
   } else if (format === 'docx') {
     const blob = new Blob([html], { type: 'application/msword' });
     const link = document.createElement('a');
