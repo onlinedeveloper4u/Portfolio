@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Code } from "lucide-react";
+import { Code, Terminal, Braces, Database, Cpu, GitBranch, Layers, Zap } from "lucide-react";
 import CVDownloadDialog from "@/components/CVDownloadDialog";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -9,23 +9,89 @@ const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3
+        staggerChildren: 0.2,
+        delayChildren: 0.3
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    }
   };
 
+  // Floating tech icons
+  const floatingIcons = [
+    { icon: Terminal, delay: 0, x: "10%", y: "20%" },
+    { icon: Braces, delay: 0.5, x: "85%", y: "15%" },
+    { icon: Database, delay: 1, x: "15%", y: "75%" },
+    { icon: Cpu, delay: 1.5, x: "80%", y: "70%" },
+    { icon: GitBranch, delay: 2, x: "5%", y: "45%" },
+    { icon: Layers, delay: 2.5, x: "90%", y: "45%" },
+  ];
+
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-20 md:py-0 bg-gradient-to-br from-background to-secondary relative">
-      {/* Header Actions - Fixed Top Right */}
+    <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-20 md:py-0 bg-gradient-to-br from-background via-secondary/20 to-background relative overflow-hidden">
+      {/* Animated grid background */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
+      </div>
+
+      {/* Gradient orbs */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 0.5, scale: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 0.3, scale: 1 }}
+        transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
+        className="absolute bottom-1/4 -right-32 w-96 h-96 bg-accent/30 rounded-full blur-3xl"
+      />
+
+      {/* Floating tech icons */}
+      {floatingIcons.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ 
+            opacity: 0.15, 
+            y: [0, -15, 0],
+          }}
+          transition={{
+            opacity: { delay: item.delay, duration: 1 },
+            y: { 
+              delay: item.delay,
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }
+          }}
+          className="absolute hidden md:block text-primary/50"
+          style={{ left: item.x, top: item.y }}
+        >
+          <item.icon size={40} strokeWidth={1} />
+        </motion.div>
+      ))}
+
+      {/* Header Actions */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
         className="absolute top-6 right-6 z-10 flex items-center gap-3"
       >
         <ThemeToggle />
@@ -36,31 +102,126 @@ const Hero = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="text-center max-w-4xl mx-auto"
+        className="text-center max-w-4xl mx-auto relative z-10"
       >
+        {/* Terminal-style badge */}
         <motion.div 
           variants={itemVariants}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border mb-6"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-card/80 backdrop-blur-sm border border-border mb-8 shadow-lg"
         >
-          <Code size={20} className="text-primary" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            <Code size={20} className="text-primary" />
+          </motion.div>
           <span className="text-foreground font-medium">Senior Software Engineer</span>
-          <Code size={20} className="text-primary" />
+          <motion.div
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="flex items-center gap-1"
+          >
+            <span className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-xs text-muted-foreground">Available</span>
+          </motion.div>
         </motion.div>
         
+        {/* Name with typing effect style */}
         <motion.h1
           variants={itemVariants}
-          className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-accent-foreground to-primary text-transparent bg-clip-text animate-text"
+          className="text-5xl md:text-7xl font-bold mb-6 relative"
         >
-          Muhammad Aqib Rafiqe
+          <span className="bg-gradient-to-r from-primary via-accent to-primary text-transparent bg-clip-text bg-[length:200%_100%] animate-gradient">
+            Muhammad Aqib Rafiqe
+          </span>
+          <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 0.8, repeat: Infinity }}
+            className="inline-block w-1 h-12 md:h-16 bg-primary ml-2 align-middle"
+          />
         </motion.h1>
+        
+        {/* Tech stack pills */}
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-wrap justify-center gap-3 mb-8"
+        >
+          {[
+            { name: "Swift", color: "from-orange-500 to-orange-600" },
+            { name: "SwiftUI", color: "from-blue-500 to-blue-600" },
+            { name: "React", color: "from-cyan-500 to-cyan-600" },
+            { name: "Node.js", color: "from-green-500 to-green-600" },
+            { name: "TypeScript", color: "from-blue-600 to-blue-700" },
+            { name: "MongoDB", color: "from-green-600 to-green-700" },
+          ].map((tech, index) => (
+            <motion.span
+              key={tech.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1 + index * 0.1 }}
+              whileHover={{ scale: 1.1, y: -2 }}
+              className={`px-4 py-1.5 text-sm font-medium text-white rounded-full bg-gradient-to-r ${tech.color} shadow-md cursor-default`}
+            >
+              {tech.name}
+            </motion.span>
+          ))}
+        </motion.div>
         
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          iOS Developer | MERN Stack Developer | Building innovative mobile and web solutions with Swift, SwiftUI, React, and Node.js
+          <span className="text-primary font-medium">iOS Developer</span> | <span className="text-primary font-medium">MERN Stack Developer</span>
+          <br />
+          Building innovative mobile and web solutions with clean code and exceptional user experiences
         </motion.p>
-        
+
+        {/* CTA Buttons */}
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-wrap justify-center gap-4"
+        >
+          <motion.a
+            href="#projects"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-shadow"
+          >
+            <Zap size={18} />
+            View Projects
+          </motion.a>
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border text-foreground rounded-full font-semibold hover:bg-muted transition-colors"
+          >
+            Get in Touch
+          </motion.a>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5 }}
+          className="absolute -bottom-20 left-1/2 transform -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="flex flex-col items-center gap-2 text-muted-foreground"
+          >
+            <span className="text-xs">Scroll to explore</span>
+            <div className="w-5 h-8 rounded-full border-2 border-muted-foreground/50 flex justify-center pt-1.5">
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1 h-1.5 rounded-full bg-muted-foreground"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
       </motion.div>
     </section>
   );
