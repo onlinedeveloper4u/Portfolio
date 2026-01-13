@@ -1,6 +1,4 @@
-
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import About from "../components/About";
 import Skills from "../components/Skills";
@@ -10,9 +8,6 @@ import CVDownloads from "../components/CVDownloads";
 import Contact from "../components/Contact";
 import FloatingNavigation from "../components/FloatingNavigation";
 import { Toaster } from "sonner";
-import { isAuthenticated } from "@/lib/auth";
-import { Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const Index = () => {
   useEffect(() => {
@@ -39,18 +34,6 @@ const Index = () => {
   return (
     <main className="bg-background text-foreground">
       <Toaster position="top-right" />
-      
-      {/* Admin button (only shows if authenticated) */}
-      {isAuthenticated() && (
-        <div className="fixed top-6 left-6 z-50">
-          <Link to="/admin">
-            <Button size="icon" variant="secondary" className="rounded-full shadow-lg">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      )}
-      
       <FloatingNavigation />
       <Hero />
       <About />
