@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server, ChevronDown, ChevronUp } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Tooltip,
   TooltipContent,
@@ -18,86 +19,135 @@ const categories = ["All", "Full-Stack", "iOS", "Cross-Platform", "MERN"];
 
 type ContributionType = "frontend" | "backend" | "fullstack";
 
+interface Project {
+  id: string;
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  category: string;
+  technologies: string[];
+  live_url: string | null;
+  github_url: string | null;
+  app_store_url: string | null;
+  play_store_url: string | null;
+  featured: boolean;
+  visible: boolean;
+  sort_order: number;
+}
+
 // Define default projects as a fallback
 const defaultProjects = [
   {
+    id: "1",
     title: "MPower Pro",
-    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. Contributed to both frontend (React Native) and backend (Strapi CMS). A creative platform that builds more than tracks - it builds you. Produce and record songs with multitrack DAW, add harmonies and effects, create instant music videos. Connect with rappers, singers, and producers globally. Features daily mood check-ins, goal tracking, challenges, masterclasses, and AI guidance. Seven apps in one - fusing music creation, collaboration, and personal development into one powerhouse platform.",
-    technologies: "iOS, Android, React Native, Strapi Backend, AI Integration",
-    imageUrl: mpowerIcon,
-    link: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
-    playStoreLink: "https://play.google.com/store/apps/details?id=com.mpower.online",
-    websiteLink: "https://mpower.online/",
-    isApp: true,
+    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. Contributed to both frontend (React Native) and backend (Strapi CMS). A creative platform that builds more than tracks - it builds you.",
+    technologies: ["iOS", "Android", "React Native", "Strapi Backend", "AI Integration"],
+    image_url: mpowerIcon,
+    live_url: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
+    play_store_url: "https://play.google.com/store/apps/details?id=com.mpower.online",
+    github_url: null,
+    app_store_url: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
     category: "Cross-Platform",
     contribution: "fullstack" as ContributionType,
-    period: "2023 - Present"
+    featured: true,
+    visible: true,
+    sort_order: 0
   },
   {
+    id: "2",
     title: "Leaf - Book Your Friends",
-    description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze! Contributed to both iOS app development and backend services including APIs, cron jobs, and cloud functions. Whether you're the friend who always hosts or just getting into event planning, Leaf keeps event scheduling, task management, and social organizing all in one place. Import events from Partiful, Luma, Eventbrite, SeatGeek, and Fandango. Smart checklists, AI-generated descriptions, group scheduler, and micro-planner assistant help you focus on the fun while Leaf handles the details.",
-    technologies: "iOS, Swift, SwiftUI, Node.js APIs, Cloud Functions, Cron Jobs, AI Integration",
-    imageUrl: leafIcon,
-    link: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
-    isApp: true,
+    description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze!",
+    technologies: ["iOS", "Swift", "SwiftUI", "Node.js APIs", "Cloud Functions"],
+    image_url: leafIcon,
+    live_url: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
+    github_url: null,
+    app_store_url: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
+    play_store_url: null,
     category: "iOS",
     contribution: "fullstack" as ContributionType,
-    period: "Nov 2020 - Present"
+    featured: true,
+    visible: true,
+    sort_order: 1
   },
   {
+    id: "3",
     title: "Ombi - Preview Restaurants",
-    description: "An immersive iOS app that lets you preview and book authentic restaurants through video. Experience the ambiance and see the food before you visit. Discover restaurants through immersive video previews that showcase the atmosphere, cuisine, and dining experience. Book tables directly through the app and make informed dining decisions with real restaurant footage.",
-    technologies: "iOS, Swift, UIKit, Video Streaming, Restaurant Booking",
-    imageUrl: ombiIcon,
-    link: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
-    isApp: true,
+    description: "An immersive iOS app that lets you preview and book authentic restaurants through video. Experience the ambiance and see the food before you visit.",
+    technologies: ["iOS", "Swift", "UIKit", "Video Streaming"],
+    image_url: ombiIcon,
+    live_url: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
+    github_url: null,
+    app_store_url: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
+    play_store_url: null,
     category: "iOS",
     contribution: "frontend" as ContributionType,
-    period: "Aug 2021 - Mar 2022"
+    featured: false,
+    visible: true,
+    sort_order: 2
   },
   {
+    id: "4",
     title: "Creator Music Studio",
-    description: "This is an all-in-one app for making music on your phone. You can create songs in popular styles, generate lyrics and melodies with AI, record vocals, and add effects like Auto-Tune. It's beginner-friendly, yet powerful enough for serious creators. Share your tracks in the Creator Feed, get feedback, and grow your audience—all from one app.",
-    technologies: "iOS, Swift, Audio Production, Music Creation, AI",
-    imageUrl: creatorIcon,
-    link: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
-    isApp: true,
+    description: "This is an all-in-one app for making music on your phone. You can create songs in popular styles, generate lyrics and melodies with AI, record vocals, and add effects like Auto-Tune.",
+    technologies: ["iOS", "Swift", "Audio Production", "AI"],
+    image_url: creatorIcon,
+    live_url: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
+    github_url: null,
+    app_store_url: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
+    play_store_url: null,
     category: "iOS",
     contribution: "frontend" as ContributionType,
-    period: "Jun 2022 - Apr 2023"
+    featured: false,
+    visible: true,
+    sort_order: 3
   },
   {
+    id: "5",
     title: "The Track App",
-    description: "A fast and minimalistic calendar and scheduling platform designed to enhance productivity through real-time event syncing, intuitive user interface, and optimized backend APIs. Focused on delivering a seamless cross-device experience with responsive design, reliable performance, and streamlined workflows to help users plan and manage their time efficiently.",
-    technologies: "Swift, SwiftUI, Event Planning",
-    imageUrl: trackIcon,
-    link: "https://thetrackapp.com/",
-    isApp: true,
+    description: "A fast and minimalistic calendar and scheduling platform designed to enhance productivity through real-time event syncing, intuitive user interface, and optimized backend APIs.",
+    technologies: ["Swift", "SwiftUI", "Event Planning"],
+    image_url: trackIcon,
+    live_url: "https://thetrackapp.com/",
+    github_url: null,
+    app_store_url: null,
+    play_store_url: null,
     category: "iOS",
     contribution: "frontend" as ContributionType,
-    period: "Apr 2022 - May 2022"
+    featured: false,
+    visible: true,
+    sort_order: 4
   },
   {
+    id: "6",
     title: "Leaf Admin Dashboard",
-    description: "Admin dashboard for the Leaf iOS app featuring user management, analytics, event monitoring, and comprehensive reporting tools. Built with React.js and integrated with Node.js backend APIs for real-time data management and analytics visualization.",
-    technologies: "React, Node.js, MongoDB, Express, Dashboard Analytics",
-    imageUrl: leafIcon,
-    link: "https://admin.joinleaf.com/",
-    isApp: false,
+    description: "Admin dashboard for the Leaf iOS app featuring user management, analytics, event monitoring, and comprehensive reporting tools.",
+    technologies: ["React", "Node.js", "MongoDB", "Express"],
+    image_url: leafIcon,
+    live_url: "https://admin.joinleaf.com/",
+    github_url: null,
+    app_store_url: null,
+    play_store_url: null,
     category: "MERN",
     contribution: "fullstack" as ContributionType,
-    period: "Nov 2020 - Present"
+    featured: false,
+    visible: true,
+    sort_order: 5
   },
   {
+    id: "7",
     title: "Vooconnect",
-    description: "Vooconnect is an all-in-one social networking platform designed to connect users through a variety of interactive features. Contributed to both iOS app development and Node.js backend APIs. The app offers functionalities such as full-screen posts, live streaming, chat with walkie-talkie capabilities, and a marketplace for local buying and selling. Users can also subscribe to content creators for exclusive access.",
-    technologies: "iOS, Swift, SwiftUI, Node.js Backend, MongoDB, REST APIs",
-    imageUrl: vooconnectIcon,
-    link: "https://apps.apple.com/us/app/vooconnect/id1573637452",
-    isApp: true,
+    description: "Vooconnect is an all-in-one social networking platform designed to connect users through a variety of interactive features.",
+    technologies: ["iOS", "Swift", "SwiftUI", "Node.js Backend"],
+    image_url: vooconnectIcon,
+    live_url: "https://apps.apple.com/us/app/vooconnect/id1573637452",
+    github_url: null,
+    app_store_url: "https://apps.apple.com/us/app/vooconnect/id1573637452",
+    play_store_url: null,
     category: "iOS",
     contribution: "fullstack" as ContributionType,
-    period: "Mar 2023 - Apr 2023"
+    featured: false,
+    visible: true,
+    sort_order: 6
   }
 ];
 
@@ -130,12 +180,16 @@ const getContributionBadge = (contribution: ContributionType) => {
 
 const MAX_DESCRIPTION_LENGTH = 150;
 
-const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; index: number }) => {
+const ProjectCard = ({ project, index }: { project: Project & { contribution?: ContributionType }; index: number }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const shouldTruncate = project.description.length > MAX_DESCRIPTION_LENGTH;
+  const description = project.description || '';
+  const shouldTruncate = description.length > MAX_DESCRIPTION_LENGTH;
   const displayDescription = isExpanded || !shouldTruncate 
-    ? project.description 
-    : project.description.slice(0, MAX_DESCRIPTION_LENGTH) + "...";
+    ? description 
+    : description.slice(0, MAX_DESCRIPTION_LENGTH) + "...";
+
+  const isApp = project.app_store_url || project.category === 'iOS' || project.category === 'Cross-Platform';
+  const technologies = project.technologies?.join(', ') || '';
 
   return (
     <motion.div
@@ -154,7 +208,7 @@ const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; i
     >
       <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
         <img 
-          src={project.imageUrl} 
+          src={project.image_url || '/placeholder.svg'} 
           alt={project.title} 
           className="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 rounded-2xl shadow-lg"
         />
@@ -226,26 +280,28 @@ const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; i
 
         <div className="mb-4">
           <span className="text-xs font-medium bg-accent/10 text-accent-foreground px-3 py-1 rounded-full">
-            {project.technologies}
+            {technologies}
           </span>
         </div>
         <div className="flex flex-wrap gap-3">
-          <a 
-            href={project.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-          >
-            <span>{project.isApp ? "App Store" : "View Project"}</span>
-            {project.isApp ? (
-              <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
-            ) : (
-              <Smartphone size={14} />
-            )}
-          </a>
-          {project.playStoreLink && (
+          {(project.app_store_url || project.live_url) && (
             <a 
-              href={project.playStoreLink} 
+              href={project.app_store_url || project.live_url || '#'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              <span>{isApp ? "App Store" : "View Project"}</span>
+              {isApp ? (
+                <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
+              ) : (
+                <Smartphone size={14} />
+              )}
+            </a>
+          )}
+          {project.play_store_url && (
+            <a 
+              href={project.play_store_url} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
@@ -256,9 +312,9 @@ const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; i
               </svg>
             </a>
           )}
-          {project.websiteLink && (
+          {project.live_url && !project.app_store_url && !isApp && (
             <a 
-              href={project.websiteLink} 
+              href={project.live_url} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
@@ -274,15 +330,37 @@ const ProjectCard = ({ project, index }: { project: typeof defaultProjects[0]; i
 };
 
 const Projects = () => {
-  const [projects, setProjects] = useState(defaultProjects);
+  const [projects, setProjects] = useState<(Project & { contribution?: ContributionType })[]>(defaultProjects);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load projects from localStorage if available
-    const storedProjects = localStorage.getItem("portfolioProjects");
-    if (storedProjects) {
-      setProjects(JSON.parse(storedProjects));
-    }
+    const fetchProjects = async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('visible', true)
+        .order('sort_order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching projects:', error);
+        // Keep default projects on error
+      } else if (data && data.length > 0) {
+        // Map database projects and add contribution type based on category
+        const mappedProjects = data.map(p => ({
+          ...p,
+          contribution: (p.category === 'Full-Stack' || p.technologies?.some((t: string) => 
+            t.toLowerCase().includes('node') || 
+            t.toLowerCase().includes('backend') ||
+            t.toLowerCase().includes('api')
+          )) ? 'fullstack' as ContributionType : 'frontend' as ContributionType
+        }));
+        setProjects(mappedProjects);
+      }
+      setLoading(false);
+    };
+
+    fetchProjects();
   }, []);
 
   const filteredProjects = activeFilter === "All" 
@@ -340,7 +418,7 @@ const Projects = () => {
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
+              <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </AnimatePresence>
         </motion.div>

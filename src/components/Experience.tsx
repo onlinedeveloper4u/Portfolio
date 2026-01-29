@@ -1,68 +1,92 @@
-
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Calendar, MapPin, Award, Code2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-// Define default experiences as a fallback (sorted by date - newest first)
-const defaultExperiences = [
+interface Experience {
+  id: string;
+  title: string;
+  company: string;
+  location: string | null;
+  start_date: string;
+  end_date: string | null;
+  description: string | null;
+  type: string;
+  visible: boolean;
+  sort_order: number;
+}
+
+// Define default experiences as a fallback
+const defaultExperiences: Experience[] = [
   {
+    id: "1",
     title: "Freelancer",
     company: "Self-employed",
-    period: "Oct 2024 - Present",
+    start_date: "Oct 2024",
+    end_date: null,
     description: "iOS development using Swift, SwiftUI, and UIKit. MERN stack development and cross-platform solutions.",
-    startDate: "2024-10",
-    location: "Remote"
+    location: "Remote",
+    type: "work",
+    visible: true,
+    sort_order: 0
   },
   {
+    id: "2",
     title: "Senior iOS Developer",
     company: "iParagons",
-    period: "Jul 2024 - Present",
-    description: "Built Leaf, an AI-powered event planning app using Swift (iOS), SwiftUI, and Core Data with backend integrations in Node.js & MongoDB. Implemented event scheduling, task management, and social coordination within a single mobile platform. Integrated third-party APIs to import events from Partiful, Luma, Eventbrite, SeatGeek, and Fandango. Developed AI-driven features including event description generation and a micro-planner assistant using OpenAI APIs.",
-    startDate: "2024-07",
-    location: "Gujrat, Pakistan"
+    start_date: "Jul 2024",
+    end_date: null,
+    description: "Built Leaf, an AI-powered event planning app using Swift (iOS), SwiftUI, and Core Data with backend integrations in Node.js & MongoDB. Implemented event scheduling, task management, and social coordination within a single mobile platform.",
+    location: "Gujrat, Pakistan",
+    type: "work",
+    visible: true,
+    sort_order: 1
   },
   {
-    title: "Freelancer",
-    company: "Self-employed",
-    period: "Jul 2021 - May 2023",
-    description: "Full-stack development projects focusing on MERN stack applications and iOS mobile development.",
-    startDate: "2021-07",
-    location: "Remote"
-  },
-  {
+    id: "3",
     title: "MERN Stack Developer",
     company: "iParagons",
-    period: "Nov 2022 - Present",
+    start_date: "Nov 2022",
+    end_date: null,
     description: "Full-stack web development using MongoDB, Express.js, React.js, and Node.js. Built admin dashboards, REST APIs, and integrated backend systems for mobile applications.",
-    startDate: "2022-11",
-    location: "Gujrat, Pakistan"
+    location: "Gujrat, Pakistan",
+    type: "work",
+    visible: true,
+    sort_order: 2
   },
   {
+    id: "4",
     title: "Junior iOS Developer",
     company: "iParagons",
-    period: "Nov 2020 - Jun 2024",
-    description: "Designed and implemented Home Tab features, including location views, people views, and multi-select 'Make Plans' flow. Developed real-time In-App Notifications module, Collections module, Explore Page with advanced filters, Custom Community Calendar, Edit Profile module, and Split the Bill functionality. Performed bug fixes, performance optimization, and UI refinements.",
-    startDate: "2020-11",
-    location: "Gujrat, Pakistan"
+    start_date: "Nov 2020",
+    end_date: "Jun 2024",
+    description: "Designed and implemented Home Tab features, including location views, people views, and multi-select 'Make Plans' flow. Developed real-time In-App Notifications module and Collections module.",
+    location: "Gujrat, Pakistan",
+    type: "work",
+    visible: true,
+    sort_order: 3
   }
 ];
 
 const Experience = () => {
-  const [experiences, setExperiences] = useState(defaultExperiences);
+  const [experiences, setExperiences] = useState<Experience[]>(defaultExperiences);
 
   useEffect(() => {
-    // Load experiences from localStorage if available
-    const storedExperiences = localStorage.getItem("portfolioExperiences");
-    if (storedExperiences) {
-      const parsed = JSON.parse(storedExperiences);
-      // Sort by date (newest first)
-      const sorted = parsed.sort((a: any, b: any) => {
-        const dateA = a.startDate || a.period;
-        const dateB = b.startDate || b.period;
-        return dateB.localeCompare(dateA);
-      });
-      setExperiences(sorted);
-    }
+    const fetchExperiences = async () => {
+      const { data, error } = await supabase
+        .from('experiences')
+        .select('*')
+        .eq('visible', true)
+        .order('sort_order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching experiences:', error);
+      } else if (data && data.length > 0) {
+        setExperiences(data);
+      }
+    };
+
+    fetchExperiences();
   }, []);
 
   return (
@@ -100,7 +124,7 @@ const Experience = () => {
           <div className="space-y-16">
             {experiences.map((exp, index) => (
               <motion.div
-                key={index}
+                key={exp.id}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: index * 0.2 }}
@@ -165,7 +189,7 @@ const Experience = () => {
                         index === 2 ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300' :
                         'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                       }`}>
-                        {exp.period}
+                        {exp.start_date} - {exp.end_date || 'Present'}
                       </span>
                     </div>
                     
