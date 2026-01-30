@@ -6,14 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Loader2, Lock, Mail, UserPlus } from 'lucide-react';
+import { Loader2, Lock, Mail } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,37 +26,15 @@ const Login = () => {
       return;
     }
 
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
-
     setLoading(true);
-    
-    if (isSignUp) {
-      const { error } = await signUp(email, password);
-      setLoading(false);
+    const { error } = await signIn(email, password);
+    setLoading(false);
 
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Account created! You are now an admin.');
-        // Auto sign in after signup
-        const { error: signInError } = await signIn(email, password);
-        if (!signInError) {
-          navigate(from, { replace: true });
-        }
-      }
+    if (error) {
+      toast.error(error.message);
     } else {
-      const { error } = await signIn(email, password);
-      setLoading(false);
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Logged in successfully');
-        navigate(from, { replace: true });
-      }
+      toast.success('Logged in successfully');
+      navigate(from, { replace: true });
     }
   };
 
@@ -66,14 +43,11 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            {isSignUp ? <UserPlus className="w-6 h-6 text-primary" /> : <Lock className="w-6 h-6 text-primary" />}
+            <Lock className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">{isSignUp ? 'Create Admin Account' : 'Admin Login'}</CardTitle>
+          <CardTitle className="text-2xl">Admin Login</CardTitle>
           <CardDescription>
-            {isSignUp 
-              ? 'Create your admin account to manage the portfolio'
-              : 'Enter your credentials to access the admin dashboard'
-            }
+            Enter your credentials to access the admin dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -112,27 +86,13 @@ const Login = () => {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {isSignUp ? 'Creating account...' : 'Signing in...'}
+                  Signing in...
                 </>
               ) : (
-                isSignUp ? 'Create Account' : 'Sign In'
+                'Sign In'
               )}
             </Button>
           </form>
-          
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              disabled={loading}
-            >
-              {isSignUp 
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"
-              }
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
