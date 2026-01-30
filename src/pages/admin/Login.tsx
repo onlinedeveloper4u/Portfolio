@@ -98,7 +98,7 @@ const Login = () => {
             </Button>
           </form>
           
-          <div className="mt-4 text-center opacity-0">
+          <div className="mt-4 text-center opacity-100">
             <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-sm text-muted-foreground hover:text-primary transition-colors" disabled={loading}>
               {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
