@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_links: {
+        Row: {
+          created_at: string
+          display_text: string | null
+          icon: string | null
+          id: string
+          sort_order: number | null
+          title: string
+          updated_at: string
+          url: string
+          visible: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          display_text?: string | null
+          icon?: string | null
+          id?: string
+          sort_order?: number | null
+          title: string
+          updated_at?: string
+          url: string
+          visible?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          display_text?: string | null
+          icon?: string | null
+          id?: string
+          sort_order?: number | null
+          title?: string
+          updated_at?: string
+          url?: string
+          visible?: boolean | null
+        }
+        Relationships: []
+      }
       experiences: {
         Row: {
           company: string
@@ -54,6 +90,39 @@ export type Database = {
           start_date?: string
           title?: string
           type?: string
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Relationships: []
+      }
+      languages: {
+        Row: {
+          created_at: string
+          flag: string | null
+          id: string
+          level: string
+          name: string
+          sort_order: number | null
+          updated_at: string
+          visible: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          flag?: string | null
+          id?: string
+          level: string
+          name: string
+          sort_order?: number | null
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          flag?: string | null
+          id?: string
+          level?: string
+          name?: string
+          sort_order?: number | null
           updated_at?: string
           visible?: boolean | null
         }
@@ -176,6 +245,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
       skills: {
         Row: {
           category: string
@@ -206,6 +299,36 @@ export type Database = {
           id?: string
           name?: string
           proficiency?: number | null
+          sort_order?: number | null
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Relationships: []
+      }
+      tech_stack: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          sort_order: number | null
+          updated_at: string
+          visible: boolean | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number | null
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
           sort_order?: number | null
           updated_at?: string
           visible?: boolean | null
@@ -248,6 +371,33 @@ export type Database = {
           name?: string
           rating?: number | null
           role?: string | null
+          sort_order?: number | null
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          sort_order: number | null
+          updated_at: string
+          visible: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number | null
+          updated_at?: string
+          visible?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
           sort_order?: number | null
           updated_at?: string
           visible?: boolean | null

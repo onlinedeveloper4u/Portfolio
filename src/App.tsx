@@ -18,6 +18,11 @@ import ExperiencesManager from "./pages/admin/ExperiencesManager";
 import SkillsManager from "./pages/admin/SkillsManager";
 import ServicesManager from "./pages/admin/ServicesManager";
 import TestimonialsManager from "./pages/admin/TestimonialsManager";
+import SiteSettingsManager from "./pages/admin/SiteSettingsManager";
+import ContactLinksManager from "./pages/admin/ContactLinksManager";
+import TechStackManager from "./pages/admin/TechStackManager";
+import ToolsManager from "./pages/admin/ToolsManager";
+import LanguagesManager from "./pages/admin/LanguagesManager";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +53,11 @@ const App = () => (
                 <Route path="skills" element={<SkillsManager />} />
                 <Route path="services" element={<ServicesManager />} />
                 <Route path="testimonials" element={<TestimonialsManager />} />
+                <Route path="site-settings" element={<SiteSettingsManager />} />
+                <Route path="contact-links" element={<ContactLinksManager />} />
+                <Route path="tech-stack" element={<TechStackManager />} />
+                <Route path="tools" element={<ToolsManager />} />
+                <Route path="languages" element={<LanguagesManager />} />
               </Route>
               
               {/* Catch-all route */}
