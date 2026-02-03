@@ -1,9 +1,77 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Code, Terminal, Braces, Database, Cpu, GitBranch, Layers, Zap } from "lucide-react";
 import CVDownloadDialog from "@/components/CVDownloadDialog";
 import ThemeToggle from "@/components/ThemeToggle";
+import { supabase } from "@/integrations/supabase/client";
+
+interface SiteSettings {
+  name: string;
+  title: string;
+  subtitle: string;
+  bio: string;
+  availability: string;
+}
+
+interface TechItem {
+  id: string;
+  name: string;
+  color: string;
+}
+
+const defaultSettings: SiteSettings = {
+  name: "Muhammad Aqib Rafiqe",
+  title: "Senior Software Engineer",
+  subtitle: "iOS Developer | MERN Stack Developer",
+  bio: "Building innovative mobile and web solutions with clean code and exceptional user experiences",
+  availability: "Available"
+};
+
+const defaultTechStack: TechItem[] = [
+  { id: "1", name: "Swift", color: "from-orange-500 to-orange-600" },
+  { id: "2", name: "SwiftUI", color: "from-blue-500 to-blue-600" },
+  { id: "3", name: "React", color: "from-cyan-500 to-cyan-600" },
+  { id: "4", name: "Node.js", color: "from-green-500 to-green-600" },
+  { id: "5", name: "TypeScript", color: "from-blue-600 to-blue-700" },
+  { id: "6", name: "MongoDB", color: "from-green-600 to-green-700" },
+];
 
 const Hero = () => {
+  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
+  const [techStack, setTechStack] = useState<TechItem[]>(defaultTechStack);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Fetch site settings
+      const { data: settingsData } = await supabase
+        .from("site_settings")
+        .select("*");
+
+      if (settingsData && settingsData.length > 0) {
+        const settingsObj: SiteSettings = { ...defaultSettings };
+        settingsData.forEach((item: { key: string; value: string | null }) => {
+          if (item.key in settingsObj) {
+            (settingsObj as any)[item.key] = item.value || "";
+          }
+        });
+        setSettings(settingsObj);
+      }
+
+      // Fetch tech stack
+      const { data: techData } = await supabase
+        .from("tech_stack")
+        .select("*")
+        .eq("visible", true)
+        .order("sort_order", { ascending: true });
+
+      if (techData && techData.length > 0) {
+        setTechStack(techData);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -115,14 +183,14 @@ const Hero = () => {
           >
             <Code size={20} className="text-primary" />
           </motion.div>
-          <span className="text-foreground font-medium">Senior Software Engineer</span>
+          <span className="text-foreground font-medium">{settings.title}</span>
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
             className="flex items-center gap-1"
           >
             <span className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-xs text-muted-foreground">Available</span>
+            <span className="text-xs text-muted-foreground">{settings.availability}</span>
           </motion.div>
         </motion.div>
         
@@ -132,7 +200,7 @@ const Hero = () => {
           className="text-5xl md:text-7xl font-bold mb-6 relative"
         >
           <span className="bg-gradient-to-r from-primary via-accent to-primary text-transparent bg-clip-text bg-[length:200%_100%] animate-gradient">
-            Muhammad Aqib Rafiqe
+            {settings.name}
           </span>
           <motion.span
             animate={{ opacity: [1, 0] }}
@@ -146,16 +214,9 @@ const Hero = () => {
           variants={itemVariants}
           className="flex flex-wrap justify-center gap-3 mb-8"
         >
-          {[
-            { name: "Swift", color: "from-orange-500 to-orange-600" },
-            { name: "SwiftUI", color: "from-blue-500 to-blue-600" },
-            { name: "React", color: "from-cyan-500 to-cyan-600" },
-            { name: "Node.js", color: "from-green-500 to-green-600" },
-            { name: "TypeScript", color: "from-blue-600 to-blue-700" },
-            { name: "MongoDB", color: "from-green-600 to-green-700" },
-          ].map((tech, index) => (
+          {techStack.map((tech, index) => (
             <motion.span
-              key={tech.name}
+              key={tech.id}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1 + index * 0.1 }}
@@ -171,9 +232,9 @@ const Hero = () => {
           variants={itemVariants}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          <span className="text-primary font-medium">iOS Developer</span> | <span className="text-primary font-medium">MERN Stack Developer</span>
+          <span className="text-primary font-medium">{settings.subtitle}</span>
           <br />
-          Building innovative mobile and web solutions with clean code and exceptional user experiences
+          {settings.bio}
         </motion.p>
 
         {/* CTA Buttons */}

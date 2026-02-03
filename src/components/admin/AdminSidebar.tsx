@@ -12,16 +12,26 @@ import {
   User,
   Menu,
   X,
+  Settings,
+  Link,
+  Code,
+  Globe,
+  Boxes,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
+  { to: '/admin/site-settings', icon: Settings, label: 'Site Settings' },
+  { to: '/admin/tech-stack', icon: Code, label: 'Tech Stack' },
   { to: '/admin/projects', icon: FolderKanban, label: 'Projects' },
   { to: '/admin/experiences', icon: Briefcase, label: 'Experiences' },
   { to: '/admin/skills', icon: Zap, label: 'Skills' },
-  { to: '/admin/services', icon: Wrench, label: 'Services' },
+  { to: '/admin/tools', icon: Wrench, label: 'Tools' },
+  { to: '/admin/languages', icon: Globe, label: 'Languages' },
+  { to: '/admin/contact-links', icon: Link, label: 'Contact Links' },
+  { to: '/admin/services', icon: Boxes, label: 'Services' },
   { to: '/admin/testimonials', icon: MessageSquareQuote, label: 'Testimonials' },
 ];
 

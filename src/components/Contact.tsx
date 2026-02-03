@@ -1,29 +1,56 @@
-
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Mail, Linkedin, Github, Video, Phone, MessageCircle, Briefcase } from "lucide-react";
-import { toast } from "sonner";
+import { Mail, Linkedin, Github, Video, Phone, MessageCircle, Briefcase, Globe, Twitter, Instagram, LucideIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-// Default contact info as a fallback
-const defaultContactInfo = {
-  email: "onlinedeveloper4u@gmail.com",
-  linkedin: "https://www.linkedin.com/in/onlinedeveloper4u",
-  github: "https://github.com/onlinedeveloper4u",
-  phone: "+923227221032",
-  whatsapp: "https://wa.me/923227221032",
-  teams: "https://teams.microsoft.com",
-  fiverr: "https://www.fiverr.com/onlinedveloper?public_mode=true"
+interface ContactLink {
+  id: string;
+  title: string;
+  icon: string | null;
+  url: string;
+  display_text: string | null;
+}
+
+const iconMap: Record<string, LucideIcon> = {
+  Mail,
+  Linkedin,
+  Github,
+  Video,
+  Phone,
+  MessageCircle,
+  Briefcase,
+  Globe,
+  Twitter,
+  Instagram,
 };
 
+const defaultContactLinks: ContactLink[] = [
+  { id: "1", title: "Email", icon: "Mail", url: "mailto:onlinedeveloper4u@gmail.com", display_text: "onlinedeveloper4u@gmail.com" },
+  { id: "2", title: "LinkedIn", icon: "Linkedin", url: "https://www.linkedin.com/in/onlinedeveloper4u", display_text: "Connect with me" },
+  { id: "3", title: "GitHub", icon: "Github", url: "https://github.com/onlinedeveloper4u", display_text: "View my projects" },
+  { id: "4", title: "Phone", icon: "Phone", url: "tel:+923227221032", display_text: "+923227221032" },
+  { id: "5", title: "WhatsApp", icon: "MessageCircle", url: "https://wa.me/923227221032", display_text: "Message me" },
+  { id: "6", title: "Microsoft Teams", icon: "Video", url: "https://teams.microsoft.com", display_text: "Video call" },
+  { id: "7", title: "Fiverr", icon: "Briefcase", url: "https://www.fiverr.com/onlinedveloper?public_mode=true", display_text: "Hire me on Fiverr" },
+];
+
 const Contact = () => {
-  const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+  const [contactLinks, setContactLinks] = useState<ContactLink[]>(defaultContactLinks);
 
   useEffect(() => {
-    // Load contact info from localStorage if available
-    const storedContactInfo = localStorage.getItem("portfolioContactInfo");
-    if (storedContactInfo) {
-      setContactInfo(JSON.parse(storedContactInfo));
-    }
+    const fetchContactLinks = async () => {
+      const { data, error } = await supabase
+        .from("contact_links")
+        .select("*")
+        .eq("visible", true)
+        .order("sort_order", { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        setContactLinks(data);
+      }
+    };
+
+    fetchContactLinks();
   }, []);
 
   const containerVariants = {
@@ -46,52 +73,6 @@ const Contact = () => {
       }
     }
   };
-
-  // Create contact items array from the contactInfo object
-  const contactItems = [
-    {
-      icon: Mail,
-      title: "Email",
-      content: contactInfo.email,
-      href: `mailto:${contactInfo.email}`
-    },
-    {
-      icon: Linkedin,
-      title: "LinkedIn",
-      content: "Connect with me",
-      href: contactInfo.linkedin
-    },
-    {
-      icon: Github,
-      title: "GitHub",
-      content: "View my projects",
-      href: contactInfo.github
-    },
-    {
-      icon: Phone,
-      title: "Phone",
-      content: contactInfo.phone,
-      href: `tel:${contactInfo.phone}`
-    },
-    {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      content: "Message me",
-      href: contactInfo.whatsapp
-    },
-    {
-      icon: Video,
-      title: "Microsoft Teams",
-      content: "Video call",
-      href: contactInfo.teams
-    },
-    {
-      icon: Briefcase,
-      title: "Fiverr",
-      content: "Hire me on Fiverr",
-      href: contactInfo.fiverr
-    }
-  ];
 
   return (
     <section id="contact" className="py-20 px-4 bg-gradient-to-br from-accent/5 to-background">
@@ -119,27 +100,29 @@ const Contact = () => {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto"
         >
-          {contactItems.map((item, index) => (
-            <motion.a
-              key={index}
-              variants={itemVariants}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              href={item.href}
-              target={item.href.startsWith('http') ? "_blank" : undefined}
-              rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
-              className="flex flex-col items-center p-6 bg-card hover:bg-accent/5 rounded-lg transition-all duration-300 group border border-transparent hover:border-accent/20"
-            >
-              <item.icon className="w-8 h-8 mb-4 text-primary group-hover:scale-110 transition-transform duration-300" />
-              <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
-              <p className="text-sm text-muted-foreground text-center">{item.content}</p>
-            </motion.a>
-          ))}
+          {contactLinks.map((item) => {
+            const IconComponent = iconMap[item.icon || "Globe"] || Globe;
+            return (
+              <motion.a
+                key={item.id}
+                variants={itemVariants}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                href={item.url}
+                target={item.url.startsWith('http') ? "_blank" : undefined}
+                rel={item.url.startsWith('http') ? "noopener noreferrer" : undefined}
+                className="flex flex-col items-center p-6 bg-card hover:bg-accent/5 rounded-lg transition-all duration-300 group border border-transparent hover:border-accent/20"
+              >
+                <IconComponent className="w-8 h-8 mb-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
+                <p className="text-sm text-muted-foreground text-center">{item.display_text}</p>
+              </motion.a>
+            );
+          })}
         </motion.div>
-
       </div>
     </section>
   );
