@@ -8,11 +8,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import leafIcon from "/lovable-uploads/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
-import ombiIcon from "/lovable-uploads/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
-import creatorIcon from "/lovable-uploads/49782510-2ca3-4464-acd4-d75f002421ba.png";
-import trackIcon from "/lovable-uploads/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png";
-import vooconnectIcon from "/lovable-uploads/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
+import leafIcon from "/assets/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
+import ombiIcon from "/assets/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
+import creatorIcon from "/assets/49782510-2ca3-4464-acd4-d75f002421ba.png";
+import trackIcon from "/assets/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png";
+import vooconnectIcon from "/assets/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
 import mpowerIcon from "@/assets/mpower-app-icon.png";
 
 const categories = ["All", "Full-Stack", "iOS", "Cross-Platform", "MERN"];
@@ -184,8 +184,8 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
   const [isExpanded, setIsExpanded] = useState(false);
   const description = project.description || '';
   const shouldTruncate = description.length > MAX_DESCRIPTION_LENGTH;
-  const displayDescription = isExpanded || !shouldTruncate 
-    ? description 
+  const displayDescription = isExpanded || !shouldTruncate
+    ? description
     : description.slice(0, MAX_DESCRIPTION_LENGTH) + "...";
 
   const isApp = project.app_store_url || project.category === 'iOS' || project.category === 'Cross-Platform';
@@ -197,8 +197,8 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: -20 }}
-      transition={{ 
-        duration: 0.4, 
+      transition={{
+        duration: 0.4,
         delay: index * 0.08,
         type: "spring",
         stiffness: 200,
@@ -207,9 +207,9 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
       className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-accent/10 group"
     >
       <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
-        <img 
-          src={project.image_url || '/placeholder.svg'} 
-          alt={project.title} 
+        <img
+          src={project.image_url || '/placeholder.svg'}
+          alt={project.title}
           className="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 rounded-2xl shadow-lg"
         />
       </div>
@@ -224,9 +224,9 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <motion.span 
+                    <motion.span
                       className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded cursor-help ${badge.className}`}
-                      whileHover={{ 
+                      whileHover={{
                         scale: 1.1,
                         boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)"
                       }}
@@ -251,10 +251,10 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
           })()}
         </div>
         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
-        
+
         {/* Description with Read More */}
         <div className="mb-4">
-          <motion.p 
+          <motion.p
             className="text-muted-foreground text-sm leading-relaxed"
             layout
           >
@@ -285,37 +285,37 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
         </div>
         <div className="flex flex-wrap gap-3">
           {(project.app_store_url || project.live_url) && (
-            <a 
-              href={project.app_store_url || project.live_url || '#'} 
-              target="_blank" 
+            <a
+              href={project.app_store_url || project.live_url || '#'}
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
               <span>{isApp ? "App Store" : "View Project"}</span>
               {isApp ? (
-                <img src="/lovable-uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
+                <img src="/assets/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
               ) : (
                 <Smartphone size={14} />
               )}
             </a>
           )}
           {project.play_store_url && (
-            <a 
-              href={project.play_store_url} 
-              target="_blank" 
+            <a
+              href={project.play_store_url}
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
               <span>Play Store</span>
               <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z" />
               </svg>
             </a>
           )}
           {project.live_url && !project.app_store_url && !isApp && (
-            <a 
-              href={project.live_url} 
-              target="_blank" 
+            <a
+              href={project.live_url}
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
@@ -349,8 +349,8 @@ const Projects = () => {
         // Map database projects and add contribution type based on category
         const mappedProjects = data.map(p => ({
           ...p,
-          contribution: (p.category === 'Full-Stack' || p.technologies?.some((t: string) => 
-            t.toLowerCase().includes('node') || 
+          contribution: (p.category === 'Full-Stack' || p.technologies?.some((t: string) =>
+            t.toLowerCase().includes('node') ||
             t.toLowerCase().includes('backend') ||
             t.toLowerCase().includes('api')
           )) ? 'fullstack' as ContributionType : 'frontend' as ContributionType
@@ -363,11 +363,11 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-  const filteredProjects = activeFilter === "All" 
-    ? projects 
+  const filteredProjects = activeFilter === "All"
+    ? projects
     : activeFilter === "Full-Stack"
-    ? projects.filter(p => p.contribution === "fullstack")
-    : projects.filter(p => p.category === activeFilter);
+      ? projects.filter(p => p.contribution === "fullstack")
+      : projects.filter(p => p.category === activeFilter);
 
   return (
     <section id="projects" className="py-20 px-4 bg-gradient-to-br from-background to-accent/5">
@@ -403,11 +403,10 @@ const Projects = () => {
               onClick={() => setActiveFilter(category)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeFilter === category
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-accent/10 text-accent-foreground hover:bg-accent/20"
-              }`}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeFilter === category
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "bg-accent/10 text-accent-foreground hover:bg-accent/20"
+                }`}
             >
               {category === "All" && <Filter size={14} className="inline mr-2" />}
               {category}
