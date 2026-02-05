@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -29,10 +30,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff, GripVertical } from 'lucide-react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff } from 'lucide-react';
 
 interface Experience {
   id: string;
@@ -48,50 +46,6 @@ interface Experience {
 }
 
 const experienceTypes = ['work', 'education', 'freelance'];
-
-const SortableRow = ({ experience, onEdit, onDelete, onToggleVisibility }: { 
-  experience: Experience; 
-  onEdit: (e: Experience) => void; 
-  onDelete: (e: Experience) => void;
-  onToggleVisibility: (e: Experience) => void;
-}) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: experience.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <TableRow ref={setNodeRef} style={style}>
-      <TableCell>
-        <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1">
-          <GripVertical className="w-4 h-4 text-muted-foreground" />
-        </button>
-      </TableCell>
-      <TableCell className="font-medium">{experience.title}</TableCell>
-      <TableCell>{experience.company}</TableCell>
-      <TableCell className="capitalize">{experience.type}</TableCell>
-      <TableCell>{experience.start_date} - {experience.end_date || 'Present'}</TableCell>
-      <TableCell>
-        <button onClick={() => onToggleVisibility(experience)} className="p-1 hover:bg-muted rounded">
-          {experience.visible ? <Eye className="w-4 h-4 text-green-500" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}
-        </button>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => onEdit(experience)}>
-            <Pencil className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => onDelete(experience)}>
-            <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-};
 
 const ExperiencesManager = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -110,26 +64,27 @@ const ExperiencesManager = () => {
     description: '',
     type: 'work',
     visible: true,
+    currentlyWorking: false,
   });
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
   const fetchExperiences = async () => {
-    const { data, error } = await supabase
-      .from('experiences')
-      .select('*')
-      .order('sort_order', { ascending: true });
+    try {
+      const { data, error } = await supabase
+        .from('experiences')
+        .select('*')
+        .order('start_date', { ascending: true }); // Ascending order (Oldest first)
 
-    if (error) {
-      toast.error('Failed to fetch experiences');
-      console.error(error);
-    } else {
-      setExperiences(data || []);
+      if (error) {
+        toast.error('Failed to fetch experiences');
+        console.error(error);
+      } else {
+        setExperiences(data || []);
+      }
+    } catch (err) {
+      console.error('Error in fetch:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -147,6 +102,7 @@ const ExperiencesManager = () => {
       description: '',
       type: 'work',
       visible: true,
+      currentlyWorking: false,
     });
     setDialogOpen(true);
   };
@@ -162,6 +118,7 @@ const ExperiencesManager = () => {
       description: experience.description || '',
       type: experience.type,
       visible: experience.visible,
+      currentlyWorking: !experience.end_date, // If no end date, assume currently working
     });
     setDialogOpen(true);
   };
@@ -172,6 +129,11 @@ const ExperiencesManager = () => {
       return;
     }
 
+    if (!formData.currentlyWorking && !formData.end_date.trim()) {
+      toast.error('End Date is required unless you are currently working there');
+      return;
+    }
+
     setSaving(true);
 
     const experienceData = {
@@ -179,7 +141,7 @@ const ExperiencesManager = () => {
       company: formData.company.trim(),
       location: formData.location.trim() || null,
       start_date: formData.start_date.trim(),
-      end_date: formData.end_date.trim() || null,
+      end_date: formData.currentlyWorking ? null : formData.end_date.trim(),
       description: formData.description.trim() || null,
       type: formData.type,
       visible: formData.visible,
@@ -234,21 +196,6 @@ const ExperiencesManager = () => {
     }
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = experiences.findIndex(e => e.id === active.id);
-    const newIndex = experiences.findIndex(e => e.id === over.id);
-    const newExperiences = arrayMove(experiences, oldIndex, newIndex);
-    setExperiences(newExperiences);
-
-    const updates = newExperiences.map((e, i) => 
-      supabase.from('experiences').update({ sort_order: i }).eq('id', e.id)
-    );
-    await Promise.all(updates);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -257,8 +204,16 @@ const ExperiencesManager = () => {
     );
   }
 
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Present';
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${day} ${date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+  };
+
   return (
     <div className="space-y-6">
+      {/* ... (existing header) ... */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Experiences</h1>
@@ -272,34 +227,43 @@ const ExperiencesManager = () => {
 
       <Card>
         <CardContent className="p-0">
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12"></TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Period</TableHead>
-                  <TableHead className="w-16">Visible</TableHead>
-                  <TableHead className="w-24">Actions</TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Company</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Period</TableHead>
+                <TableHead className="w-16">Visible</TableHead>
+                <TableHead className="w-24">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {experiences.map((experience) => (
+                <TableRow key={experience.id}>
+                  <TableCell className="font-medium">{experience.title}</TableCell>
+                  <TableCell>{experience.company}</TableCell>
+                  <TableCell className="capitalize">{experience.type}</TableCell>
+                  <TableCell>{formatDate(experience.start_date)} - {formatDate(experience.end_date)}</TableCell>
+                  <TableCell>
+                    <button onClick={() => toggleVisibility(experience)} className="p-1 hover:bg-muted rounded">
+                      {experience.visible ? <Eye className="w-4 h-4 text-green-500" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}
+                    </button>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(experience)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => { setDeletingExperience(experience); setDeleteDialogOpen(true); }}>
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                <SortableContext items={experiences.map(e => e.id)} strategy={verticalListSortingStrategy}>
-                  {experiences.map(experience => (
-                    <SortableRow
-                      key={experience.id}
-                      experience={experience}
-                      onEdit={openEditDialog}
-                      onDelete={(e) => { setDeletingExperience(e); setDeleteDialogOpen(true); }}
-                      onToggleVisibility={toggleVisibility}
-                    />
-                  ))}
-                </SortableContext>
-              </TableBody>
-            </Table>
-          </DndContext>
+              ))}
+            </TableBody>
+          </Table>
           {experiences.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
               No experiences yet. Click "Add Experience" to create one.
@@ -360,19 +324,38 @@ const ExperiencesManager = () => {
                 <Label htmlFor="start_date">Start Date *</Label>
                 <Input
                   id="start_date"
+                  type="date"
                   value={formData.start_date}
                   onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                  placeholder="e.g., Jan 2023 or 2023-01"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="end_date">End Date (leave empty for Present)</Label>
-                <Input
-                  id="end_date"
-                  value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                  placeholder="e.g., Dec 2024 or Present"
-                />
+                <Label htmlFor="end_date">End Date</Label>
+                <div className="space-y-2">
+                  <Input
+                    id="end_date"
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    disabled={formData.currentlyWorking}
+                  />
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="currentlyWorking"
+                      checked={formData.currentlyWorking}
+                      onCheckedChange={(checked) => {
+                        setFormData({
+                          ...formData,
+                          currentlyWorking: checked as boolean,
+                          end_date: checked ? '' : formData.end_date
+                        });
+                      }}
+                    />
+                    <Label htmlFor="currentlyWorking" className="text-sm font-normal cursor-pointer">
+                      Currently working here
+                    </Label>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="space-y-2">
