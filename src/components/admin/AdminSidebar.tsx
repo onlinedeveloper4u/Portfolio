@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import {
   LayoutDashboard,
@@ -8,8 +7,6 @@ import {
   Zap,
   Wrench,
   MessageSquareQuote,
-  LogOut,
-  User,
   Menu,
   X,
   Settings,
@@ -36,14 +33,8 @@ const navItems = [
 ];
 
 const AdminSidebar = () => {
-  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/admin/login');
-  };
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -76,27 +67,6 @@ const AdminSidebar = () => {
           </NavLink>
         ))}
       </nav>
-
-      {/* User Section */}
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-muted/50 mb-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <User className="w-4 h-4 text-primary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.email}</p>
-            <p className="text-xs text-muted-foreground">Administrator</p>
-          </div>
-        </div>
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2"
-          onClick={handleSignOut}
-        >
-          <LogOut className="w-4 h-4" />
-          Sign Out
-        </Button>
-      </div>
     </div>
   );
 
