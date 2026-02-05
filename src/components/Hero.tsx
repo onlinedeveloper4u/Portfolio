@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Code, Terminal, Braces, Database, Cpu, GitBranch, Layers, Zap } from "lucide-react";
-import CVDownloadDialog from "@/components/CVDownloadDialog";
 import ThemeToggle from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -164,7 +163,6 @@ const Hero = () => {
         className="absolute top-6 right-6 z-10 flex items-center gap-3"
       >
         <ThemeToggle />
-        <CVDownloadDialog />
       </motion.div>
 
       <motion.div
