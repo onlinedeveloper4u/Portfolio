@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import DynamicMeta from "@/components/DynamicMeta";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -31,12 +32,13 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <AuthProvider>
         <TooltipProvider>
+          <DynamicMeta />
           <Toaster />
           <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              
+
               {/* Admin routes */}
               <Route path="/admin/login" element={<Login />} />
               <Route
@@ -59,7 +61,7 @@ const App = () => (
                 <Route path="tools" element={<ToolsManager />} />
                 <Route path="languages" element={<LanguagesManager />} />
               </Route>
-              
+
               {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />
             </Routes>

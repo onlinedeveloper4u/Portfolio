@@ -15,6 +15,32 @@ interface ImageUploadProps {
   className?: string;
 }
 
+// Helper function to extract storage path from Supabase public URL
+const getStoragePathFromUrl = (url: string): string | null => {
+  if (!url) return null;
+
+  // Match pattern: /storage/v1/object/public/portfolio-assets/path/to/file
+  const storageMatch = url.match(/\/storage\/v1\/object\/public\/portfolio-assets\/(.+)/);
+  if (storageMatch) return storageMatch[1];
+
+  // Also handle direct paths stored in DB
+  if (url.startsWith('/')) return url.slice(1);
+
+  return null;
+};
+
+// Helper function to delete image from Supabase storage
+const deleteImageFromStorage = async (url: string): Promise<void> => {
+  const path = getStoragePathFromUrl(url);
+  if (!path) return;
+
+  try {
+    await supabase.storage.from('portfolio-assets').remove([path]);
+  } catch (error) {
+    console.error('Failed to delete image from storage:', error);
+  }
+};
+
 const ImageUpload = ({
   value,
   onChange,
@@ -43,6 +69,11 @@ const ImageUpload = ({
 
     setUploading(true);
     try {
+      // Delete old image if exists
+      if (value) {
+        await deleteImageFromStorage(value);
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
 
@@ -66,7 +97,12 @@ const ImageUpload = ({
     }
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
+    // Delete image from storage
+    if (value) {
+      await deleteImageFromStorage(value);
+    }
+
     onChange('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -135,4 +171,7 @@ const ImageUpload = ({
   );
 };
 
+// Export the delete function for use in other components
+export { deleteImageFromStorage };
 export default ImageUpload;
+

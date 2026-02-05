@@ -11,6 +11,8 @@ interface SiteSettings {
   subtitle: string;
   bio: string;
   availability: string;
+  profile_image: string;
+  show_profile_image: string;
 }
 
 interface TechItem {
@@ -25,7 +27,9 @@ const Hero = () => {
     title: "",
     subtitle: "",
     bio: "",
-    availability: ""
+    availability: "",
+    profile_image: "",
+    show_profile_image: "false"
   });
   const [techStack, setTechStack] = useState<TechItem[]>([]);
 
@@ -42,7 +46,9 @@ const Hero = () => {
           title: "",
           subtitle: "",
           bio: "",
-          availability: ""
+          availability: "",
+          profile_image: "",
+          show_profile_image: "false"
         };
         settingsData.forEach((item: { key: string; value: string | null }) => {
           if (item.key in settingsObj) {
@@ -188,6 +194,22 @@ const Hero = () => {
             <span className="text-xs text-muted-foreground">{settings.availability}</span>
           </motion.div>
         </motion.div>
+
+        {/* Profile Image - conditionally displayed */}
+        {settings.show_profile_image === "true" && settings.profile_image && (
+          <motion.div
+            variants={itemVariants}
+            className="mb-6"
+          >
+            <motion.img
+              src={settings.profile_image}
+              alt={settings.name}
+              className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto border-4 border-primary/30 shadow-2xl object-cover"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+          </motion.div>
+        )}
 
         {/* Name with typing effect style */}
         <motion.h1

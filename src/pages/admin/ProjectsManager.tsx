@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
-import ImageUpload from '@/components/admin/ImageUpload';
+import ImageUpload, { deleteImageFromStorage } from '@/components/admin/ImageUpload';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
@@ -53,9 +53,9 @@ interface Project {
 
 const categories = ['Full-Stack', 'iOS', 'Cross-Platform', 'MERN', 'Web'];
 
-const SortableRow = ({ project, onEdit, onDelete, onToggleVisibility }: { 
-  project: Project; 
-  onEdit: (p: Project) => void; 
+const SortableRow = ({ project, onEdit, onDelete, onToggleVisibility }: {
+  project: Project;
+  onEdit: (p: Project) => void;
   onDelete: (p: Project) => void;
   onToggleVisibility: (p: Project) => void;
 }) => {
@@ -195,6 +195,11 @@ const ProjectsManager = () => {
     setSaving(true);
     const technologies = formData.technologies.split(',').map(t => t.trim()).filter(Boolean);
 
+    // Delete old image if it's being replaced
+    if (editingProject && editingProject.image_url && editingProject.image_url !== formData.image_url) {
+      await deleteImageFromStorage(editingProject.image_url);
+    }
+
     const projectData = {
       title: formData.title.trim(),
       description: formData.description.trim() || null,
@@ -232,6 +237,12 @@ const ProjectsManager = () => {
   const handleDelete = async () => {
     if (!deletingProject) return;
     setSaving(true);
+
+    // Delete image from storage if exists
+    if (deletingProject.image_url) {
+      await deleteImageFromStorage(deletingProject.image_url);
+    }
+
     const { error } = await supabase.from('projects').delete().eq('id', deletingProject.id);
     setSaving(false);
 
@@ -268,7 +279,7 @@ const ProjectsManager = () => {
     setProjects(newProjects);
 
     // Update sort_order in database
-    const updates = newProjects.map((p, i) => 
+    const updates = newProjects.map((p, i) =>
       supabase.from('projects').update({ sort_order: i }).eq('id', p.id)
     );
     await Promise.all(updates);

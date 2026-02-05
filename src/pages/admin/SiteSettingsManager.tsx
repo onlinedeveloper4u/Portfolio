@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 interface SiteSettings {
   name: string;
@@ -14,6 +16,8 @@ interface SiteSettings {
   subtitle: string;
   bio: string;
   availability: string;
+  profile_image: string;
+  show_profile_image: string;
 }
 
 const SiteSettingsManager = () => {
@@ -22,7 +26,9 @@ const SiteSettingsManager = () => {
     title: "",
     subtitle: "",
     bio: "",
-    availability: "Available"
+    availability: "Available",
+    profile_image: "",
+    show_profile_image: "false"
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -45,7 +51,9 @@ const SiteSettingsManager = () => {
         title: "",
         subtitle: "",
         bio: "",
-        availability: "Available"
+        availability: "Available",
+        profile_image: "",
+        show_profile_image: "false"
       };
       data.forEach((item: { key: string; value: string | null }) => {
         if (item.key in settingsObj) {
@@ -59,20 +67,20 @@ const SiteSettingsManager = () => {
 
   const handleSave = async () => {
     setSaving(true);
-    
+
     const updates = Object.entries(settings).map(([key, value]) => ({
       key,
       value
     }));
 
     for (const update of updates) {
+      // Use upsert to insert if not exists, or update if exists
       const { error } = await supabase
         .from("site_settings")
-        .update({ value: update.value })
-        .eq("key", update.key);
+        .upsert({ key: update.key, value: update.value }, { onConflict: 'key' });
 
       if (error) {
-        toast.error(`Failed to update ${update.key}`);
+        toast.error(`Failed to save ${update.key}`);
         console.error(error);
         setSaving(false);
         return;
@@ -93,77 +101,112 @@ const SiteSettingsManager = () => {
 
   return (
     <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Site Settings</h1>
-            <p className="text-muted-foreground">Manage your hero section and profile content</p>
-          </div>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-            Save Changes
-          </Button>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Site Settings</h1>
+          <p className="text-muted-foreground">Manage your hero section and profile content</p>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  value={settings.name}
-                  onChange={(e) => setSettings({ ...settings, name: e.target.value })}
-                  placeholder="Your full name"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="title">Job Title</Label>
-                <Input
-                  id="title"
-                  value={settings.title}
-                  onChange={(e) => setSettings({ ...settings, title: e.target.value })}
-                  placeholder="e.g., Senior Software Engineer"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="subtitle">Subtitle / Specializations</Label>
-              <Input
-                id="subtitle"
-                value={settings.subtitle}
-                onChange={(e) => setSettings({ ...settings, subtitle: e.target.value })}
-                placeholder="e.g., iOS Developer | MERN Stack Developer"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="bio">Bio / Tagline</Label>
-              <Textarea
-                id="bio"
-                value={settings.bio}
-                onChange={(e) => setSettings({ ...settings, bio: e.target.value })}
-                placeholder="A short description about yourself"
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="availability">Availability Status</Label>
-              <Input
-                id="availability"
-                value={settings.availability}
-                onChange={(e) => setSettings({ ...settings, availability: e.target.value })}
-                placeholder="e.g., Available, Busy, Open to opportunities"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+          Save Changes
+        </Button>
       </div>
+
+      {/* Profile Image Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile Image</CardTitle>
+          <CardDescription>
+            This image is used as your favicon and og:image for social sharing
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ImageUpload
+            value={settings.profile_image}
+            onChange={(url) => setSettings({ ...settings, profile_image: url })}
+            folder="profile"
+            label="Profile Photo"
+          />
+
+          <div className="flex items-center space-x-3 pt-2">
+            <Switch
+              id="show_profile_image"
+              checked={settings.show_profile_image === "true"}
+              onCheckedChange={(checked) =>
+                setSettings({ ...settings, show_profile_image: checked ? "true" : "false" })
+              }
+            />
+            <Label htmlFor="show_profile_image" className="cursor-pointer">
+              Show profile image on portfolio
+            </Label>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            When enabled, your profile image will be displayed in the hero section of your portfolio
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                value={settings.name}
+                onChange={(e) => setSettings({ ...settings, name: e.target.value })}
+                placeholder="Your full name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="title">Job Title</Label>
+              <Input
+                id="title"
+                value={settings.title}
+                onChange={(e) => setSettings({ ...settings, title: e.target.value })}
+                placeholder="e.g., Senior Software Engineer"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="subtitle">Subtitle / Specializations</Label>
+            <Input
+              id="subtitle"
+              value={settings.subtitle}
+              onChange={(e) => setSettings({ ...settings, subtitle: e.target.value })}
+              placeholder="e.g., iOS Developer | MERN Stack Developer"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="bio">Bio / Tagline</Label>
+            <Textarea
+              id="bio"
+              value={settings.bio}
+              onChange={(e) => setSettings({ ...settings, bio: e.target.value })}
+              placeholder="A short description about yourself"
+              rows={3}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="availability">Availability Status</Label>
+            <Input
+              id="availability"
+              value={settings.availability}
+              onChange={(e) => setSettings({ ...settings, availability: e.target.value })}
+              placeholder="e.g., Available, Busy, Open to opportunities"
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
 export default SiteSettingsManager;
+

@@ -173,7 +173,7 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
             >
               <span>{isApp ? "App Store" : "View Project"}</span>
               {isApp ? (
-                <img src="/assets/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
+                <img src="/uploads/e3d2fef8-1fe6-47de-857d-d0baaa452f90.png" alt="App Store" className="w-4 h-4" />
               ) : (
                 <Smartphone size={14} />
               )}
