@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code, Smartphone, Globe, Filter, Layers, Monitor, Server, ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,7 +60,7 @@ const getContributionBadge = (contribution: ContributionType) => {
 
 const MAX_DESCRIPTION_LENGTH = 150;
 
-const ProjectCard = ({ project, index }: { project: Project & { contribution?: ContributionType }; index: number }) => {
+const ProjectCard = forwardRef<HTMLDivElement, { project: Project & { contribution?: ContributionType }; index: number }>(({ project, index }, ref) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const description = project.description || '';
   const shouldTruncate = description.length > MAX_DESCRIPTION_LENGTH;
@@ -73,6 +73,7 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -207,7 +208,9 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
       </div>
     </motion.div>
   );
-};
+});
+
+ProjectCard.displayName = "ProjectCard";
 
 const Projects = () => {
   const [projects, setProjects] = useState<(Project & { contribution?: ContributionType })[]>([]);
