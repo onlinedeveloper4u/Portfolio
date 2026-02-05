@@ -88,7 +88,7 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
     >
       <div className="h-48 overflow-hidden bg-gradient-to-br from-background to-accent/5 flex items-center justify-center">
         <img
-          src={project.image_url || '/placeholder.svg'}
+          src={project.image_url}
           alt={project.title}
           className="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 rounded-2xl shadow-lg"
         />
