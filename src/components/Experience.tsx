@@ -16,60 +16,8 @@ interface Experience {
   sort_order: number;
 }
 
-// Define default experiences as a fallback
-const defaultExperiences: Experience[] = [
-  {
-    id: "1",
-    title: "Freelancer",
-    company: "Self-employed",
-    start_date: "Oct 2024",
-    end_date: null,
-    description: "iOS development using Swift, SwiftUI, and UIKit. MERN stack development and cross-platform solutions.",
-    location: "Remote",
-    type: "work",
-    visible: true,
-    sort_order: 0
-  },
-  {
-    id: "2",
-    title: "Senior iOS Developer",
-    company: "iParagons",
-    start_date: "Jul 2024",
-    end_date: null,
-    description: "Built Leaf, an AI-powered event planning app using Swift (iOS), SwiftUI, and Core Data with backend integrations in Node.js & MongoDB. Implemented event scheduling, task management, and social coordination within a single mobile platform.",
-    location: "Gujrat, Pakistan",
-    type: "work",
-    visible: true,
-    sort_order: 1
-  },
-  {
-    id: "3",
-    title: "MERN Stack Developer",
-    company: "iParagons",
-    start_date: "Nov 2022",
-    end_date: null,
-    description: "Full-stack web development using MongoDB, Express.js, React.js, and Node.js. Built admin dashboards, REST APIs, and integrated backend systems for mobile applications.",
-    location: "Gujrat, Pakistan",
-    type: "work",
-    visible: true,
-    sort_order: 2
-  },
-  {
-    id: "4",
-    title: "Junior iOS Developer",
-    company: "iParagons",
-    start_date: "Nov 2020",
-    end_date: "Jun 2024",
-    description: "Designed and implemented Home Tab features, including location views, people views, and multi-select 'Make Plans' flow. Developed real-time In-App Notifications module and Collections module.",
-    location: "Gujrat, Pakistan",
-    type: "work",
-    visible: true,
-    sort_order: 3
-  }
-];
-
 const Experience = () => {
-  const [experiences, setExperiences] = useState<Experience[]>(defaultExperiences);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -81,7 +29,7 @@ const Experience = () => {
 
       if (error) {
         console.error('Error fetching experiences:', error);
-      } else if (data && data.length > 0) {
+      } else if (data) {
         setExperiences(data);
       }
     };
@@ -120,7 +68,7 @@ const Experience = () => {
         <div className="relative">
           {/* Colorful Timeline line */}
           <div className="absolute left-4 md:left-1/2 md:-ml-1 top-0 bottom-0 w-2 bg-gradient-to-b from-violet-500 via-pink-500 via-cyan-500 to-emerald-500 rounded-full shadow-lg"></div>
-          
+
           <div className="space-y-16">
             {experiences.map((exp, index) => (
               <motion.div
@@ -129,39 +77,35 @@ const Experience = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className={`relative flex items-center ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
+                className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  }`}
               >
                 {/* Colorful Timeline dot */}
-                <div className={`absolute left-4 md:left-1/2 md:-ml-4 w-8 h-8 rounded-full border-4 border-background shadow-xl z-10 flex items-center justify-center ${
-                  index === 0 ? 'bg-gradient-to-r from-violet-500 to-purple-600' :
-                  index === 1 ? 'bg-gradient-to-r from-pink-500 to-rose-600' :
-                  index === 2 ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
-                  'bg-gradient-to-r from-emerald-500 to-green-600'
-                }`}>
+                <div className={`absolute left-4 md:left-1/2 md:-ml-4 w-8 h-8 rounded-full border-4 border-background shadow-xl z-10 flex items-center justify-center ${index === 0 ? 'bg-gradient-to-r from-violet-500 to-purple-600' :
+                    index === 1 ? 'bg-gradient-to-r from-pink-500 to-rose-600' :
+                      index === 2 ? 'bg-gradient-to-r from-cyan-500 to-blue-600' :
+                        'bg-gradient-to-r from-emerald-500 to-green-600'
+                  }`}>
                   <div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-inner"></div>
                 </div>
-                
+
                 {/* Content card */}
                 <div className={`ml-16 md:ml-0 md:w-5/12 ${index % 2 === 0 ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
                   <motion.div
                     whileHover={{ scale: 1.02, boxShadow: "0 25px 50px -10px rgba(139, 92, 246, 0.3)" }}
-                    className={`p-8 rounded-2xl shadow-xl border-2 transition-all duration-300 backdrop-blur-sm ${
-                      index === 0 ? 'bg-gradient-to-br from-violet-50/80 to-purple-50/80 dark:from-violet-900/20 dark:to-purple-900/20 border-violet-200 dark:border-violet-700 hover:border-violet-400 dark:hover:border-violet-500' :
-                      index === 1 ? 'bg-gradient-to-br from-pink-50/80 to-rose-50/80 dark:from-pink-900/20 dark:to-rose-900/20 border-pink-200 dark:border-pink-700 hover:border-pink-400 dark:hover:border-pink-500' :
-                      index === 2 ? 'bg-gradient-to-br from-cyan-50/80 to-blue-50/80 dark:from-cyan-900/20 dark:to-blue-900/20 border-cyan-200 dark:border-cyan-700 hover:border-cyan-400 dark:hover:border-cyan-500' :
-                      'bg-gradient-to-br from-emerald-50/80 to-green-50/80 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-200 dark:border-emerald-700 hover:border-emerald-400 dark:hover:border-emerald-500'
-                    }`}
+                    className={`p-8 rounded-2xl shadow-xl border-2 transition-all duration-300 backdrop-blur-sm ${index === 0 ? 'bg-gradient-to-br from-violet-50/80 to-purple-50/80 dark:from-violet-900/20 dark:to-purple-900/20 border-violet-200 dark:border-violet-700 hover:border-violet-400 dark:hover:border-violet-500' :
+                        index === 1 ? 'bg-gradient-to-br from-pink-50/80 to-rose-50/80 dark:from-pink-900/20 dark:to-rose-900/20 border-pink-200 dark:border-pink-700 hover:border-pink-400 dark:hover:border-pink-500' :
+                          index === 2 ? 'bg-gradient-to-br from-cyan-50/80 to-blue-50/80 dark:from-cyan-900/20 dark:to-blue-900/20 border-cyan-200 dark:border-cyan-700 hover:border-cyan-400 dark:hover:border-cyan-500' :
+                            'bg-gradient-to-br from-emerald-50/80 to-green-50/80 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-200 dark:border-emerald-700 hover:border-emerald-400 dark:hover:border-emerald-500'
+                      }`}
                   >
                     {/* Colorful Company icon */}
                     <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
-                        index === 0 ? 'bg-gradient-to-br from-violet-400 to-purple-500' :
-                        index === 1 ? 'bg-gradient-to-br from-pink-400 to-rose-500' :
-                        index === 2 ? 'bg-gradient-to-br from-cyan-400 to-blue-500' :
-                        'bg-gradient-to-br from-emerald-400 to-green-500'
-                      }`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${index === 0 ? 'bg-gradient-to-br from-violet-400 to-purple-500' :
+                          index === 1 ? 'bg-gradient-to-br from-pink-400 to-rose-500' :
+                            index === 2 ? 'bg-gradient-to-br from-cyan-400 to-blue-500' :
+                              'bg-gradient-to-br from-emerald-400 to-green-500'
+                        }`}>
                         <Code2 className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
@@ -174,38 +118,36 @@ const Experience = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Colorful Duration */}
                     <div className="flex items-center gap-2 mb-4 text-sm">
                       <Calendar size={14} className={
                         index === 0 ? 'text-violet-500' :
-                        index === 1 ? 'text-pink-500' :
-                        index === 2 ? 'text-cyan-500' :
-                        'text-emerald-500'
+                          index === 1 ? 'text-pink-500' :
+                            index === 2 ? 'text-cyan-500' :
+                              'text-emerald-500'
                       } />
-                      <span className={`px-3 py-1 rounded-full font-medium shadow-sm ${
-                        index === 0 ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300' :
-                        index === 1 ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300' :
-                        index === 2 ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300' :
-                        'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-                      }`}>
+                      <span className={`px-3 py-1 rounded-full font-medium shadow-sm ${index === 0 ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300' :
+                          index === 1 ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300' :
+                            index === 2 ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300' :
+                              'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                        }`}>
                         {exp.start_date} - {exp.end_date || 'Present'}
                       </span>
                     </div>
-                    
+
                     {/* Description */}
                     <p className="text-muted-foreground leading-relaxed">
                       {exp.description}
                     </p>
-                    
+
                     {/* Colorful Achievement badge */}
                     <div className="mt-4 pt-4 border-t border-border/30">
-                      <div className={`flex items-center gap-2 text-xs font-medium ${
-                        index === 0 ? 'text-violet-600 dark:text-violet-400' :
-                        index === 1 ? 'text-pink-600 dark:text-pink-400' :
-                        index === 2 ? 'text-cyan-600 dark:text-cyan-400' :
-                        'text-emerald-600 dark:text-emerald-400'
-                      }`}>
+                      <div className={`flex items-center gap-2 text-xs font-medium ${index === 0 ? 'text-violet-600 dark:text-violet-400' :
+                          index === 1 ? 'text-pink-600 dark:text-pink-400' :
+                            index === 2 ? 'text-cyan-600 dark:text-cyan-400' :
+                              'text-emerald-600 dark:text-emerald-400'
+                        }`}>
                         <Award size={12} className="animate-pulse" />
                         <span>Key Contributor</span>
                       </div>

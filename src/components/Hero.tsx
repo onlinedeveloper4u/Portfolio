@@ -19,26 +19,15 @@ interface TechItem {
   color: string;
 }
 
-const defaultSettings: SiteSettings = {
-  name: "Muhammad Aqib Rafiqe",
-  title: "Senior Software Engineer",
-  subtitle: "iOS Developer | MERN Stack Developer",
-  bio: "Building innovative mobile and web solutions with clean code and exceptional user experiences",
-  availability: "Available"
-};
-
-const defaultTechStack: TechItem[] = [
-  { id: "1", name: "Swift", color: "from-orange-500 to-orange-600" },
-  { id: "2", name: "SwiftUI", color: "from-blue-500 to-blue-600" },
-  { id: "3", name: "React", color: "from-cyan-500 to-cyan-600" },
-  { id: "4", name: "Node.js", color: "from-green-500 to-green-600" },
-  { id: "5", name: "TypeScript", color: "from-blue-600 to-blue-700" },
-  { id: "6", name: "MongoDB", color: "from-green-600 to-green-700" },
-];
-
 const Hero = () => {
-  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
-  const [techStack, setTechStack] = useState<TechItem[]>(defaultTechStack);
+  const [settings, setSettings] = useState<SiteSettings>({
+    name: "",
+    title: "",
+    subtitle: "",
+    bio: "",
+    availability: ""
+  });
+  const [techStack, setTechStack] = useState<TechItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +37,13 @@ const Hero = () => {
         .select("*");
 
       if (settingsData && settingsData.length > 0) {
-        const settingsObj: SiteSettings = { ...defaultSettings };
+        const settingsObj: SiteSettings = {
+          name: "",
+          title: "",
+          subtitle: "",
+          bio: "",
+          availability: ""
+        };
         settingsData.forEach((item: { key: string; value: string | null }) => {
           if (item.key in settingsObj) {
             (settingsObj as any)[item.key] = item.value || "";
@@ -64,7 +59,7 @@ const Hero = () => {
         .eq("visible", true)
         .order("sort_order", { ascending: true });
 
-      if (techData && techData.length > 0) {
+      if (techData) {
         setTechStack(techData);
       }
     };
@@ -85,8 +80,8 @@ const Hero = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         type: "spring",
@@ -135,13 +130,13 @@ const Hero = () => {
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ 
-            opacity: 0.15, 
+          animate={{
+            opacity: 0.15,
             y: [0, -15, 0],
           }}
           transition={{
             opacity: { delay: item.delay, duration: 1 },
-            y: { 
+            y: {
               delay: item.delay,
               duration: 4,
               repeat: Infinity,
@@ -166,14 +161,14 @@ const Hero = () => {
         <CVDownloadDialog />
       </motion.div>
 
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="text-center max-w-4xl mx-auto relative z-10"
       >
         {/* Terminal-style badge */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-card/80 backdrop-blur-sm border border-border mb-8 shadow-lg"
         >
@@ -193,7 +188,7 @@ const Hero = () => {
             <span className="text-xs text-muted-foreground">{settings.availability}</span>
           </motion.div>
         </motion.div>
-        
+
         {/* Name with typing effect style */}
         <motion.h1
           variants={itemVariants}
@@ -208,7 +203,7 @@ const Hero = () => {
             className="inline-block w-1 h-12 md:h-16 bg-primary ml-2 align-middle"
           />
         </motion.h1>
-        
+
         {/* Tech stack pills */}
         <motion.div
           variants={itemVariants}
@@ -227,7 +222,7 @@ const Hero = () => {
             </motion.span>
           ))}
         </motion.div>
-        
+
         <motion.p
           variants={itemVariants}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"

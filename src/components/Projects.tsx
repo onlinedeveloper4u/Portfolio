@@ -8,12 +8,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import leafIcon from "/assets/0535b3ff-2532-4ceb-9b7d-02e62f7af27a.png";
-import ombiIcon from "/assets/24e71ac5-ca00-4833-89e1-cd14ba31993b.png";
-import creatorIcon from "/assets/49782510-2ca3-4464-acd4-d75f002421ba.png";
-import trackIcon from "/assets/bf6979bc-a5f4-431b-9be4-ebc88d57297c.png";
-import vooconnectIcon from "/assets/7185eb43-f0d7-495c-a39d-cdd65ceda626.png";
-import mpowerIcon from "@/assets/mpower-app-icon.png";
 
 const categories = ["All", "Full-Stack", "iOS", "Cross-Platform", "MERN"];
 
@@ -35,121 +29,7 @@ interface Project {
   sort_order: number;
 }
 
-// Define default projects as a fallback
-const defaultProjects = [
-  {
-    id: "1",
-    title: "MPower Pro",
-    description: "Music · Mind · Mastery Mobile App. The ultimate studio for music, mind and mastery. Contributed to both frontend (React Native) and backend (Strapi CMS). A creative platform that builds more than tracks - it builds you.",
-    technologies: ["iOS", "Android", "React Native", "Strapi Backend", "AI Integration"],
-    image_url: mpowerIcon,
-    live_url: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
-    play_store_url: "https://play.google.com/store/apps/details?id=com.mpower.online",
-    github_url: null,
-    app_store_url: "https://apps.apple.com/au/app/mpower-pro/id6443431786",
-    category: "Cross-Platform",
-    contribution: "fullstack" as ContributionType,
-    featured: true,
-    visible: true,
-    sort_order: 0
-  },
-  {
-    id: "2",
-    title: "Leaf - Book Your Friends",
-    description: "Planning a casual hangout or hobby meetup shouldn't feel like a full-time job. Meet Leaf – the playful, AI-powered event planner that makes organizing small group gatherings a breeze!",
-    technologies: ["iOS", "Swift", "SwiftUI", "Node.js APIs", "Cloud Functions"],
-    image_url: leafIcon,
-    live_url: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
-    github_url: null,
-    app_store_url: "https://apps.apple.com/lt/app/leaf-book-your-friends/id1040588046",
-    play_store_url: null,
-    category: "iOS",
-    contribution: "fullstack" as ContributionType,
-    featured: true,
-    visible: true,
-    sort_order: 1
-  },
-  {
-    id: "3",
-    title: "Ombi - Preview Restaurants",
-    description: "An immersive iOS app that lets you preview and book authentic restaurants through video. Experience the ambiance and see the food before you visit.",
-    technologies: ["iOS", "Swift", "UIKit", "Video Streaming"],
-    image_url: ombiIcon,
-    live_url: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
-    github_url: null,
-    app_store_url: "https://apps.apple.com/us/app/ombi-preview-restaurants/id1598753264",
-    play_store_url: null,
-    category: "iOS",
-    contribution: "frontend" as ContributionType,
-    featured: false,
-    visible: true,
-    sort_order: 2
-  },
-  {
-    id: "4",
-    title: "Creator Music Studio",
-    description: "This is an all-in-one app for making music on your phone. You can create songs in popular styles, generate lyrics and melodies with AI, record vocals, and add effects like Auto-Tune.",
-    technologies: ["iOS", "Swift", "Audio Production", "AI"],
-    image_url: creatorIcon,
-    live_url: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
-    github_url: null,
-    app_store_url: "https://apps.apple.com/us/app/creator-music-studio/id6445974873",
-    play_store_url: null,
-    category: "iOS",
-    contribution: "frontend" as ContributionType,
-    featured: false,
-    visible: true,
-    sort_order: 3
-  },
-  {
-    id: "5",
-    title: "The Track App",
-    description: "A fast and minimalistic calendar and scheduling platform designed to enhance productivity through real-time event syncing, intuitive user interface, and optimized backend APIs.",
-    technologies: ["Swift", "SwiftUI", "Event Planning"],
-    image_url: trackIcon,
-    live_url: "https://thetrackapp.com/",
-    github_url: null,
-    app_store_url: null,
-    play_store_url: null,
-    category: "iOS",
-    contribution: "frontend" as ContributionType,
-    featured: false,
-    visible: true,
-    sort_order: 4
-  },
-  {
-    id: "6",
-    title: "Leaf Admin Dashboard",
-    description: "Admin dashboard for the Leaf iOS app featuring user management, analytics, event monitoring, and comprehensive reporting tools.",
-    technologies: ["React", "Node.js", "MongoDB", "Express"],
-    image_url: leafIcon,
-    live_url: "https://admin.joinleaf.com/",
-    github_url: null,
-    app_store_url: null,
-    play_store_url: null,
-    category: "MERN",
-    contribution: "fullstack" as ContributionType,
-    featured: false,
-    visible: true,
-    sort_order: 5
-  },
-  {
-    id: "7",
-    title: "Vooconnect",
-    description: "Vooconnect is an all-in-one social networking platform designed to connect users through a variety of interactive features.",
-    technologies: ["iOS", "Swift", "SwiftUI", "Node.js Backend"],
-    image_url: vooconnectIcon,
-    live_url: "https://apps.apple.com/us/app/vooconnect/id1573637452",
-    github_url: null,
-    app_store_url: "https://apps.apple.com/us/app/vooconnect/id1573637452",
-    play_store_url: null,
-    category: "iOS",
-    contribution: "fullstack" as ContributionType,
-    featured: false,
-    visible: true,
-    sort_order: 6
-  }
-];
+
 
 const getContributionBadge = (contribution: ContributionType) => {
   switch (contribution) {
@@ -330,7 +210,7 @@ const ProjectCard = ({ project, index }: { project: Project & { contribution?: C
 };
 
 const Projects = () => {
-  const [projects, setProjects] = useState<(Project & { contribution?: ContributionType })[]>(defaultProjects);
+  const [projects, setProjects] = useState<(Project & { contribution?: ContributionType })[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [loading, setLoading] = useState(true);
 

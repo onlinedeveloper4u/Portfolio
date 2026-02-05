@@ -24,18 +24,8 @@ const iconMap: Record<string, LucideIcon> = {
   Instagram,
 };
 
-const defaultContactLinks: ContactLink[] = [
-  { id: "1", title: "Email", icon: "Mail", url: "mailto:onlinedeveloper4u@gmail.com", display_text: "onlinedeveloper4u@gmail.com" },
-  { id: "2", title: "LinkedIn", icon: "Linkedin", url: "https://www.linkedin.com/in/onlinedeveloper4u", display_text: "Connect with me" },
-  { id: "3", title: "GitHub", icon: "Github", url: "https://github.com/onlinedeveloper4u", display_text: "View my projects" },
-  { id: "4", title: "Phone", icon: "Phone", url: "tel:+923227221032", display_text: "+923227221032" },
-  { id: "5", title: "WhatsApp", icon: "MessageCircle", url: "https://wa.me/923227221032", display_text: "Message me" },
-  { id: "6", title: "Microsoft Teams", icon: "Video", url: "https://teams.microsoft.com", display_text: "Video call" },
-  { id: "7", title: "Fiverr", icon: "Briefcase", url: "https://www.fiverr.com/onlinedveloper?public_mode=true", display_text: "Hire me on Fiverr" },
-];
-
 const Contact = () => {
-  const [contactLinks, setContactLinks] = useState<ContactLink[]>(defaultContactLinks);
+  const [contactLinks, setContactLinks] = useState<ContactLink[]>([]);
 
   useEffect(() => {
     const fetchContactLinks = async () => {
@@ -45,7 +35,7 @@ const Contact = () => {
         .eq("visible", true)
         .order("sort_order", { ascending: true });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         setContactLinks(data);
       }
     };
@@ -65,8 +55,8 @@ const Contact = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         duration: 0.5
@@ -106,7 +96,7 @@ const Contact = () => {
               <motion.a
                 key={item.id}
                 variants={itemVariants}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)",
                 }}

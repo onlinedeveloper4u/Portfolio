@@ -29,63 +29,12 @@ const categoryIcons: Record<string, { icon: typeof Smartphone; color: string; sh
   "AI & Innovation": { icon: Brain, color: "from-cyan-500 to-blue-500", shadowColor: "shadow-cyan-500/20" },
 };
 
-const defaultSkillCategories = [
-  {
-    title: "iOS Development",
-    skills: [
-      { name: "Swift", level: 95 },
-      { name: "SwiftUI", level: 90 },
-      { name: "UIKit", level: 88 },
-      { name: "Core Data", level: 85 },
-      { name: "REST APIs", level: 92 }
-    ]
-  },
-  {
-    title: "MERN Stack",
-    skills: [
-      { name: "MongoDB", level: 88 },
-      { name: "Express.js", level: 90 },
-      { name: "React.js", level: 92 },
-      { name: "Node.js", level: 90 },
-      { name: "Redux Toolkit", level: 85 }
-    ]
-  },
-  {
-    title: "Backend & APIs",
-    skills: [
-      { name: "RESTful APIs", level: 95 },
-      { name: "Strapi", level: 82 },
-      { name: "Authentication", level: 90 },
-      { name: "Database Design", level: 88 },
-      { name: "WebSocket", level: 80 }
-    ]
-  },
-  {
-    title: "AI & Innovation",
-    skills: [
-      { name: "OpenAI Integration", level: 85 },
-      { name: "AI Features", level: 82 },
-      { name: "Content Generation", level: 80 },
-      { name: "Smart Automation", level: 78 },
-      { name: "ML APIs", level: 70 }
-    ]
-  }
-];
-
-const defaultTools = ["Git", "Xcode", "VS Code", "Figma", "Jira", "TestFlight", "Docker", "Firebase", "Postman", "GitHub Actions"];
-
-const defaultLanguages = [
-  { name: "English", level: "Professional", flag: "🇺🇸" },
-  { name: "Urdu", level: "Native", flag: "🇵🇰" },
-  { name: "Punjabi", level: "Native", flag: "🗣️" }
-];
-
 const Skills = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [skillCategories, setSkillCategories] = useState(defaultSkillCategories);
-  const [tools, setTools] = useState(defaultTools);
-  const [languages, setLanguages] = useState(defaultLanguages);
+  const [skillCategories, setSkillCategories] = useState<{ title: string; skills: { name: string; level: number }[] }[]>([]);
+  const [tools, setTools] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<{ name: string; level: string; flag: string }[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,15 +54,13 @@ const Skills = () => {
           }
           grouped[skill.category].push({ name: skill.name, level: skill.proficiency || 80 });
         });
-        
+
         const categories = Object.entries(grouped).map(([title, skills]) => ({
           title,
           skills
         }));
-        
-        if (categories.length > 0) {
-          setSkillCategories(categories);
-        }
+
+        setSkillCategories(categories);
       }
 
       // Fetch tools
@@ -123,7 +70,7 @@ const Skills = () => {
         .eq("visible", true)
         .order("sort_order", { ascending: true });
 
-      if (toolsData && toolsData.length > 0) {
+      if (toolsData) {
         setTools(toolsData.map((t: Tool) => t.name));
       }
 
@@ -134,7 +81,7 @@ const Skills = () => {
         .eq("visible", true)
         .order("sort_order", { ascending: true });
 
-      if (languagesData && languagesData.length > 0) {
+      if (languagesData) {
         setLanguages(languagesData.map((l: Language) => ({
           name: l.name,
           level: l.level,
@@ -163,7 +110,7 @@ const Skills = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6 border border-primary/20"
@@ -184,7 +131,7 @@ const Skills = () => {
           {skillCategories.map((category, categoryIndex) => {
             const iconData = categoryIcons[category.title] || { icon: Code2, color: "from-gray-500 to-gray-600", shadowColor: "shadow-gray-500/20" };
             const IconComponent = iconData.icon;
-            
+
             return (
               <motion.div
                 key={category.title}
@@ -194,7 +141,7 @@ const Skills = () => {
                 className={`p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl ${iconData.shadowColor}`}
               >
                 <div className="flex items-center gap-4 mb-6">
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     className={`p-3 rounded-xl bg-gradient-to-br ${iconData.color} text-white shadow-lg`}
                   >
@@ -244,7 +191,7 @@ const Skills = () => {
             </div>
             <h3 className="text-xl font-bold">Tools & Platforms</h3>
           </div>
-          
+
           <div className="flex flex-wrap gap-3">
             {tools.map((tool, index) => (
               <motion.span
@@ -272,7 +219,7 @@ const Skills = () => {
             <h3 className="text-xl font-bold mb-2">Languages</h3>
             <p className="text-muted-foreground text-sm">Communication skills</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {languages.map((language, index) => (
               <motion.div
